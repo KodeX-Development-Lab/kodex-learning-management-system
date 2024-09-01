@@ -6,7 +6,7 @@ use App\Modules\Categories\Http\Controllers\Api\CategoryController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
-use App\Modules\User\Http\Controllers\Api\UserController as ApiUserController;
+use App\Modules\User\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,12 +36,12 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
     });
 });
 
-Route::prefix('/v1')->middleware(['auth:sanctum'])->group(function () {
-    Route::resource('/users', ApiUserController::class);
+Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function () {
+    Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class)->middleware('CheckAdmin');
     Route::resource('categories', CategoryController::class);
     Route::resource('languages', LanguageController::class);
 
     Route::resource('professional-fields', ProfessionalFieldController::class);
-    Route::post('instructor/create', [InstructorController::class, 'instructorCreate']);
+    Route::post('become-instructor', [InstructorController::class, 'becomeInstructor'])->name('becomeInstructor');
 });
