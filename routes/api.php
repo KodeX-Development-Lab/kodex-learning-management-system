@@ -36,6 +36,10 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
     });
 
     Route::prefix('/v1')->group(function(){
+        Route::post('statusUpdate/{status}',[InstructorController::class,'statusUpdate'])->middleware('CheckAdmin');
+    });
+
+    Route::prefix('/v1')->group(function(){
         Route::resource('professionalField',ProfessionalFieldController::class);
     });
 
