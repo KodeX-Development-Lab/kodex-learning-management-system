@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Course\Model;
 
+use App\Models\User;
 use App\Modules\Categories\Models\Category;
 use App\Modules\Languages\Models\Language;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -12,23 +13,20 @@ class Course extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'title',
-        'slug',
-        'user_id',
-        'what_will_learn',
-        'requirement',
-        'description',
-        'for_whom',
-        'thumbnail',
-        'preview',
-        'total_time',
-        'last_updated_at',
-        'level',
-        'is_published',
-        'useful_links',
+        'title', 'slug', 'user_id', 'category_ids', 'language_ids',
+        'what_will_learn', 'requirement', 'description', 'for_whom',
+        'thumbnail', 'preview', 'last_updated_at', 'level', 'is_published',
+        'useful_links', 'total_time',
     ];
 
-    protected $cast = ["category_ids" => 'array', "language_ids" => 'array'];
+    protected $casts = [
+        'category_ids' => 'array',
+        'language_ids' => 'array',
+        'useful_links' => 'array',
+        'preview' => 'boolean',
+        'is_published' => 'boolean',
+        'last_updated_at' => 'datetime',
+    ];
 
     public function categories()
     {
@@ -37,6 +35,21 @@ class Course extends Model
     public function languages()
     {
         return $this->hasMany(Language::class, 'id', 'language_ids');
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopeFilter($query, $filter)
+    {
+        $query->when($filter['search'] ?? false, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+            });
+        });
     }
 
 }

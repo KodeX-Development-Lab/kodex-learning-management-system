@@ -54,6 +54,5 @@ class RoleSeeder extends Seeder
             'useful_links' => json_encode(['https://example.com']),
             'created_at' => now(),
             'updated_at' => now()]);
-
     }
 }
