@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Modules\ProfessionalField\Models;
+namespace App\Modules\Languages\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProfessionalField extends Model
+class Language extends Model
 {
     use HasFactory, HasUuids;
-
-    protected $fillable = ['name','slug', 'description'];
+    protected $fillable = [
+        'name',
+        'code',
+        'created_by',
+        'updated_by',
+    ];
 }
