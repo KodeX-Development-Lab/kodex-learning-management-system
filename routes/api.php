@@ -3,6 +3,7 @@
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
 use App\Modules\Auth\Http\Controllers\Api\InstructorController;
 use App\Modules\Categories\Http\Controllers\Api\CategoryController;
+use App\Modules\Course\Http\Controller\CourseController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
@@ -40,8 +41,8 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class)->middleware('CheckAdmin');
     Route::resource('categories', CategoryController::class);
+    Route::resource('courses', CourseController::class);
     Route::resource('languages', LanguageController::class);
-
     Route::resource('professional-fields', ProfessionalFieldController::class);
     Route::post('become-instructor', [InstructorController::class, 'becomeInstructor'])->name('becomeInstructor');
 });

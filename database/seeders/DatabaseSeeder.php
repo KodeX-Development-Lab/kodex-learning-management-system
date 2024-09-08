@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Modules\Course\Model\Course;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +18,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
         ]);
 
-        // $this->call(RolesAndPermissionsSeeder::class);
+       
     }
 }
