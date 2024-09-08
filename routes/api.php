@@ -37,6 +37,17 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
     });
 });
 
+
+
+Route::prefix('/v1')->group(function () {
+    Route::post('instructor/create',[InstructorController::class,'instructorCreate']);
+});
+
+Route::prefix('/v1')->group(function(){
+    Route::post('statusUpdate/{status}',[InstructorController::class,'statusUpdate'])->middleware('CheckAdmin');
+});
+
+
 Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class)->middleware('CheckAdmin');

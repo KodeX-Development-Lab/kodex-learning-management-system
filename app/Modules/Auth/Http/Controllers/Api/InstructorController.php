@@ -43,4 +43,17 @@ class InstructorController extends Controller
             ], 500);
         }
     }
+ }
+
+  public function statusUpdate(Request $request, Instructor $status){
+    $status->update([
+        'approve_status' => 'Approved'
+    ]);
+    $status->assignRole('Instructor');
+    return response()->json([
+        "status"  => true,
+        "data"    => $status,
+        "message" => "Admin Approved successfully",
+    ], 200);
+  }
 }
