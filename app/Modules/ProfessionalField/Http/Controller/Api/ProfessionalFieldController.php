@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Modules\ProfessionalField\Http\Request\ProfessionalFieldRequest;
 use App\Modules\ProfessionalField\Models\ProfessionalField;
 use Illuminate\Http\Request;
+use App\Modules\ProfessionalField\Services\ProfessionalFieldService;
 
 class ProfessionalFieldController extends Controller{
     private $service;
 
-    public function __construct( $service ){
+    public function __construct( ProfessionalFieldService $service ){
         $this->service=$service;
     }
 

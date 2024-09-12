@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
 use App\Modules\Auth\Http\Controllers\Api\InstructorController;
+use App\Modules\CourseUser\Http\Controller\Api\CourseUserController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 
 /*
@@ -41,6 +42,10 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
 
     Route::prefix('/v1')->group(function(){
         Route::resource('professionalField',ProfessionalFieldController::class);
+    });
+
+    Route::prefix('/v1')->group(function(){
+        Route::post('/courses/enroll/{id}',[CourseUserController::class,'store']);
     });
 
 
