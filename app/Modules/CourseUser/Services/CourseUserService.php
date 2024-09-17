@@ -7,7 +7,7 @@ use App\Modules\CourseUser\Http\Controller\Api\CourseUserController;
 
 class CourseUserService {
 
-    public function store($request,$course_id){
+    public function store($course_id){
         $courseUser=  CourseUser::create([
             'course_id'=>$course_id,
             'user_id'=>Auth::user()->id,

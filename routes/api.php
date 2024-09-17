@@ -45,7 +45,7 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
     });
 
     Route::prefix('/v1')->group(function(){
-        Route::post('/courses/enroll/{id}',[CourseUserController::class,'store']);
+        Route::post('/courses/{id}/enroll/',[CourseUserController::class,'store']);
     });
 
 

@@ -13,10 +13,10 @@ class CourseUserController extends Controller{
         $this->service=$service;
     }
 
-    public function store(CourseUserRequest $request,$course_id )
+    public function store( $course_id )
     {
 
-        $courseUser = $this->service->store($request,$course_id);
+        $courseUser = $this->service->store($course_id);
 
         return response()->json([
             'status'   => true,
