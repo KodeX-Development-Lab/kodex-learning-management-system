@@ -2,6 +2,7 @@
 
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
 use App\Modules\Auth\Http\Controllers\Api\InstructorController;
+use App\Modules\CourseUser\Http\Controller\Api\CourseUserController;
 use App\Modules\Categories\Http\Controllers\Api\CategoryController;
 use App\Modules\Course\Http\Controller\CourseController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
@@ -43,10 +44,6 @@ Route::prefix('/v1')->group(function () {
     Route::post('instructor/create',[InstructorController::class,'instructorCreate']);
 });
 
-Route::prefix('/v1')->group(function(){
-    Route::post('statusUpdate/{status}',[InstructorController::class,'statusUpdate'])->middleware('CheckAdmin');
-});
-
 
 Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function () {
     Route::resource('users', UserController::class);
@@ -56,4 +53,7 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
     Route::resource('languages', LanguageController::class);
     Route::resource('professional-fields', ProfessionalFieldController::class);
     Route::post('become-instructor', [InstructorController::class, 'becomeInstructor'])->name('becomeInstructor');
+    Route::post('instructors/{id}/status',[InstructorController::class,'statusUpdate'])->middleware('CheckAdmin');
+
+    Route::post('/courses/{id}/enroll/',[CourseUserController::class,'store']);
 });
