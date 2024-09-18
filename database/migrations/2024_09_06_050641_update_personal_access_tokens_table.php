@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('professional_fields', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('personal_access_tokens', function (Blueprint $table) {
+            $table->uuid('tokenable_id')->change();
         });
+
     }
 
     /**
@@ -25,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('professional_fields');
+        Schema::table('personal_access_tokens', function (Blueprint $table) {
+            $table->unsignedBigInteger('tokenable_id')->change();
+        });
+
     }
 };
