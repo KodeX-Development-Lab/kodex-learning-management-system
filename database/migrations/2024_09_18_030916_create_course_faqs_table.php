@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('course_id');
             $table->text('question');
             $table->text('answer');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
