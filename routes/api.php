@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\CourseFaq\Http\Controller\Api\CourseFaqController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
@@ -46,6 +47,10 @@ Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
 
     Route::prefix('/v1')->group(function(){
         Route::post('/courses/{id}/enroll/',[CourseUserController::class,'store']);
+    });
+
+    Route::prefix('/v1/{course_id}')->group(function(){
+        Route::resource('course_faq',CourseFaqController::class);
     });
 
 
