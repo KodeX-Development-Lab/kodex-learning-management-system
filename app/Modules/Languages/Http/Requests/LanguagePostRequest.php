@@ -4,7 +4,7 @@ namespace App\Modules\Languages\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LanguageRequest extends FormRequest
+class LanguagePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

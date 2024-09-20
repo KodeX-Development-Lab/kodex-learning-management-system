@@ -4,6 +4,7 @@ namespace App\Modules\Auth\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Instructor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -44,15 +45,20 @@ class InstructorController extends Controller
         }
     }
 
-    public function statusUpdate(Request $request, Instructor $status)
+    public function statusUpdate(Request $request, Instructor $instructor)
     {
-        $status->update([
-            'approve_status' => 'Approved',
+        $instructor->update([
+            'approve_status' => $request->status,
         ]);
-        $status->assignRole('Instructor');
+
+        $user = User::findOrFail($instructor->user_id);
+        $user->assignRole('Instructor');
+
         return response()->json([
             "status"  => true,
-            "data"    => $status,
+            "data"    => [
+                'instructor' => $instructor,
+            ],
             "message" => "Admin Approved successfully",
         ], 200);
     }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Modules\Topics\Http\Request;
+namespace App\Modules\Topics\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class TopicRequest extends FormRequest {
+class TopicRequest extends FormRequest
+{
 
-      /**
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool

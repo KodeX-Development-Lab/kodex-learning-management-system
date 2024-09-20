@@ -19,8 +19,8 @@ class AuthController extends Controller
 
         if (!Auth::attempt($request->only(['email', 'password']))) {
             return response()->json([
-                "status" => false,
-                "data" => null,
+                "status"  => false,
+                "data"    => null,
                 "message" => "Login Fail",
             ], 401);
         }
@@ -30,13 +30,33 @@ class AuthController extends Controller
         $token = $request->user()->createToken("LARAVEL_TOKEN");
 
         return response()->json([
-            "status" => true,
-            "data" => [
-                'user' => $user,
+            "status"  => true,
+            "data"    => [
+                'user'  => $user,
                 'token' => $token->plainTextToken,
             ],
             "message" => "Login successful",
         ], 200);
+    }
+
+    public function getAuthUser()
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            return response()->json([
+                "status"  => true,
+                'data'    => [
+                    'user' => $user,
+                ],
+                'message' => 'Success',
+            ], 200);
+        } else {
+            return response()->json([
+                'status'  => false,
+                'message' => "Session expired or Invalid Credentials",
+            ], 401);
+        }
     }
 
     //change password
@@ -44,8 +64,8 @@ class AuthController extends Controller
     {
         // Validate the input
         $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:8',
+            'current_password'      => 'required',
+            'new_password'          => 'required|min:8',
             'password_confirmation' => 'required|min:6|same:new_password',
         ]);
 
@@ -55,8 +75,8 @@ class AuthController extends Controller
         // Check if the current password matches
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
-                "status" => false,
-                "data" => null,
+                "status"  => false,
+                "data"    => null,
                 "message" => "Current password is incorrect.",
             ], 500);
         }
@@ -66,7 +86,7 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json([
-            "status" => true,
+            "status"  => true,
             "message" => "Password Changed Successfully.",
         ], 200);
     }
@@ -76,10 +96,10 @@ class AuthController extends Controller
         $request->validated($request->only(['name', 'email', 'password']));
 
         $user = User::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'slug'     => Str::slug($request->name),
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
@@ -88,9 +108,9 @@ class AuthController extends Controller
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
-            "status" => 200,
-            "data" => [
-                "user" => $user,
+            "status"  => 200,
+            "data"    => [
+                "user"  => $user,
                 "token" => $token,
             ],
             "message" => "Registration successful",
