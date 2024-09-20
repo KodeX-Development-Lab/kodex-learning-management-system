@@ -39,6 +39,14 @@ class InstructorController extends Controller
         try {
             $user = auth()->user();
 
+            if ($user->hasRole('Instructor')) {
+                return response()->json([
+                    'status'  => true,
+                    'data'    => null,
+                    'message' => 'Already Instructor',
+                ], 400);
+            }
+
             $instructor = $this->service->store($request, $user);
 
             return response()->json([
@@ -63,6 +71,14 @@ class InstructorController extends Controller
     {
         try {
             $user = auth()->user();
+
+            if ($user->hasRole('Instructor')) {
+                return response()->json([
+                    'status'  => true,
+                    'data'    => null,
+                    'message' => 'Already Instructor',
+                ], 400);
+            }
 
             $instructor = InstructorDetail::where('user_id', $user->id)->first();
 

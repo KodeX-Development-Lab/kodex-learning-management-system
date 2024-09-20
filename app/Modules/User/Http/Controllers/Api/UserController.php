@@ -18,7 +18,7 @@ class UserController extends Controller
 
         return response()->json([
             "success" => true,
-            "data" => [
+            "data"    => [
                 'users' => $users,
             ],
             "message" => "Lists of Users",
@@ -29,7 +29,9 @@ class UserController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $user,
+            'data'    => [
+                'user' => $user,
+            ],
         ], 200);
     }
 
@@ -38,8 +40,8 @@ class UserController extends Controller
         $request->validated($request->only(['name', 'email', 'password']));
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
@@ -48,14 +50,14 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'data' => $user,
+            'data'    => $user,
         ], 201);
     }
 
     public function update(Request $request, User $user)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'  => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
@@ -63,7 +65,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User updated successfully',
-            'data' => $user,
+            'data'    => $user,
         ], 200);
     }
 
