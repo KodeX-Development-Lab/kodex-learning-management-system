@@ -13,47 +13,46 @@ class InstructorController extends Controller
     public function becomeInstructor(Request $request)
     {
         Validator::make($request->all(), [
-            'professional_field_id'    => 'required|exists:professional_field,id',
-            'work_experience_year'     => 'required|integer',
+            'professional_field_id' => 'required|exists:professional_field,id',
+            'work_experience_year' => 'required|integer',
             'teaching_experience_year' => 'required|integer',
         ])->validate();
 
         try {
             $instructor = Instructor::create([
-                'user_id'                  => Auth::id(),
-                'professional_field_id'    => $request->professional_field_id,
-                'work_experience_year'     => $request->work_experience_year,
+                'user_id' => Auth::id(),
+                'professional_field_id' => $request->professional_field_id,
+                'work_experience_year' => $request->work_experience_year,
                 'teaching_experience_year' => $request->teaching_experience_year,
             ]);
 
             return response()->json([
-                'status'  => true,
-                'data'    => [
+                'status' => true,
+                'data' => [
                     'instructor' => $instructor,
                 ],
                 'message' => 'Instructor create successfully',
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'  => false,
-                'data'    => [
+                'status' => false,
+                'data' => [
                     'instructor' => null,
                 ],
                 'message' => 'Error Creating Instructor' . $th->getMessage(),
             ], 500);
         }
     }
- }
-
-  public function statusUpdate(Request $request, Instructor $status){
-    $status->update([
-        'approve_status' => 'Approved'
-    ]);
-    $status->assignRole('Instructor');
-    return response()->json([
-        "status"  => true,
-        "data"    => $status,
-        "message" => "Admin Approved successfully",
-    ], 200);
-  }
+    public function statusUpdate(Request $request, Instructor $status)
+    {
+        $status->update([
+            'approve_status' => 'Approved',
+        ]);
+        $status->assignRole('Instructor');
+        return response()->json([
+            "status" => true,
+            "data" => $status,
+            "message" => "Admin Approved successfully",
+        ], 200);
+    }
 }
