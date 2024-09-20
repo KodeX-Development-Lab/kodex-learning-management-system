@@ -3,6 +3,7 @@
 namespace App\Modules\Languages\Services;
 
 use App\Modules\Languages\Models\Language;
+use Illuminate\Support\Str;
 
 class LanguageService
 {
@@ -57,6 +58,7 @@ class LanguageService
         try {
             $language = Language::create([
                 'name'       => $request->name,
+                'slug'        => Str::slug($request->name),
                 'code'       => $request->code,
                 'created_by' => $user->id,
             ]);
@@ -82,6 +84,7 @@ class LanguageService
         try {
             $language->update([
                 'name'       => $request->name,
+                'slug'        => Str::slug($request->name),
                 'code'       => $request->code,
                 'updated_by' => $user,
 

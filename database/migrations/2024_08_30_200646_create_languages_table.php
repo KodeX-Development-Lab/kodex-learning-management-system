@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('languages', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->string('code',255)->unique();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

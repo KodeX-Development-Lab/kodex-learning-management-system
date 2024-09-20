@@ -3,40 +3,51 @@
 namespace App\Modules\ProfessionalField\Services;
 
 use App\Modules\ProfessionalField\Models\ProfessionalField;
+use Illuminate\Support\Str;
 
-class ProfessionalFieldService {
-    public function all(){
-     $professionalField= ProfessionalField::when(request('key'),function($query){
-        $query->orWhere('name','like','%'.request('key').'%');
-        $query->orWhere('description','like','%'.request('key').'%');
-      })->paginate();
+class ProfessionalFieldService
+{
+    public function all($request)
+    {
+        $keyword = $request->search ? $request->search : '';
+        $limit   = $request->limit ? $request->limit : 10;
 
-      return $professionalField;
+        $topics = ProfessionalField::where(function ($query) use ($keyword) {
+            $query->where('name', 'LIKE', "%$keyword%");
+        })
+            ->paginate($limit);
+
+        return $topics;
     }
 
-    public function get($id){
-        $professionalField=ProfessionalField::where('id',$id)->first();
+    public function get($id)
+    {
+        $professionalField = ProfessionalField::where('id', $id)->first();
 
         return $professionalField;
     }
 
-    public function store($request){
-      $professionalField=  ProfessionalField::create([
-            'name'=>$request->name,
-            'description'=>$request->description
+    public function store($request)
+    {
+        $professionalField = ProfessionalField::create([
+            'name'        => $request->name,
+            'slug'        => Str::slug($request->name),
+            'description' => $request->description,
         ]);
         return $professionalField;
     }
 
-    public function update($professionalField, $data,)
+    public function update($professionalField, $request)
     {
-        $professionalField->name        = $data->name;
-        $professionalField->description = $data->description;
+        $professionalField->name        = $request->name;
+        $professionalField->slug        = Str::slug($request->name);
+        $professionalField->description = $request->description;
         $professionalField->save();
         return $professionalField;
     }
 
-    public function delete ($professionalField){
+    public function delete($professionalField)
+    {
         $professionalField->delete();
 
         return true;

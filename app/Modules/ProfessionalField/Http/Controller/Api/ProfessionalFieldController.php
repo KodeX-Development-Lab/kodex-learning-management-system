@@ -5,29 +5,33 @@ namespace App\Modules\ProfessionalField\Http\Controller\Api;
 use App\Http\Controllers\Controller;
 use App\Modules\ProfessionalField\Http\Request\ProfessionalFieldRequest;
 use App\Modules\ProfessionalField\Models\ProfessionalField;
-use Illuminate\Http\Request;
 use App\Modules\ProfessionalField\Services\ProfessionalFieldService;
+use Illuminate\Http\Request;
 
-class ProfessionalFieldController extends Controller{
+class ProfessionalFieldController extends Controller
+{
     private $service;
 
-    public function __construct( ProfessionalFieldService $service ){
-        $this->service=$service;
+    public function __construct(ProfessionalFieldService $service)
+    {
+        $this->service = $service;
     }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         return response()->json([
-            'status'   => true,
+            'status'  => true,
             'data'    => [
-                'professionalField' => $this->service->all(),
+                'professionalField' => $this->service->all($request),
             ],
             'message' => 'Success',
         ], 200);
     }
 
-    public function show(ProfessionalField $professionalField){
+    public function show(ProfessionalField $professionalField)
+    {
         return response()->json([
-            'status'   => true,
+            'status'  => true,
             'data'    => [
                 'professionalField' => $professionalField,
             ],
@@ -41,7 +45,7 @@ class ProfessionalFieldController extends Controller{
         $professionalField = $this->service->store($request);
 
         return response()->json([
-            'status'   => true,
+            'status'  => true,
             'data'    => [
                 'professionalField' => $professionalField,
             ],
@@ -55,7 +59,7 @@ class ProfessionalFieldController extends Controller{
         $professionalField = $this->service->update($professionalField, $request);
 
         return response()->json([
-            'status'   => true,
+            'status'  => true,
             'data'    => [
                 'professionalField' => $professionalField,
             ],

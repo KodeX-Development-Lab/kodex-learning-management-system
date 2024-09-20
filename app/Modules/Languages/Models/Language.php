@@ -11,6 +11,7 @@ class Language extends Model
     use HasFactory, HasUuids;
     protected $fillable = [
         'name',
+        'slug',
         'code',
         'created_by',
         'updated_by',

@@ -4,7 +4,6 @@ use App\Modules\Auth\Http\Controllers\Api\AuthController;
 use App\Modules\Auth\Http\Controllers\Api\InstructorController;
 use App\Modules\Categories\Http\Controllers\Api\CategoryController;
 use App\Modules\CourseFaq\Http\Controller\Api\CourseFaqController;
-use App\Modules\CourseUser\Http\Controller\Api\CourseUserController;
 use App\Modules\Course\Http\Controller\CourseController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
@@ -53,7 +52,7 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
 });
 
 /** Instructor Dashboard */
-Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum'])->name('instructor-dashboard.')->group(function () {
+Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instructor'])->name('instructor-dashboard.')->group(function () {
     Route::resource('courses', CourseController::class);
     Route::resource('courses/{course_id}/sections', CourseController::class);
     Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', CourseController::class);
