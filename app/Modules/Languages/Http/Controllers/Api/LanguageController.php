@@ -3,10 +3,10 @@
 namespace App\Modules\Languages\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Languages\Http\Requests\LanguageRequest;
 use App\Modules\Languages\Models\Language;
-use Illuminate\Http\Request;
-use App\Modules\Languages\Http\Requests\LanguagePostRequest;
 use App\Modules\Languages\Services\LanguageService;
+use Illuminate\Http\Request;
 
 class LanguageController extends Controller
 {
@@ -22,36 +22,23 @@ class LanguageController extends Controller
         return $this->service->all($request);
     }
 
-    public function store(Request $request, Language $language)
-    {
-        $user = auth()->user();
-        if($user){
-            $user = $user->id;
-
-        }
-        // else{
-        //     $user = 1;
-        // }
-        return $this->service->store($request, $language, $user);
-    }
-
     public function show(Language $language)
     {
         return $this->service->show($language);
-
     }
 
-    public function update(Request $request, Language $language)
+    public function store(LanguageRequest $request)
     {
         $user = auth()->user();
-        if($user){
-            $user = $user->id;
 
-        }
-        // else{
-        //     $user = 1;
-        // }
-        return $this->service->update($request, $language, $user);
+        return $this->service->store($request, $user);
+    }
+
+    public function update(LanguageRequest $request, Language $language)
+    {
+        $user = auth()->user();
+
+        return $this->service->update($language, $request, $user);
     }
 
     public function destroy(Language $language)

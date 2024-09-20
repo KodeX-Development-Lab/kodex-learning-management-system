@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
-
     private $service;
 
     public function __construct(TopicService $service)

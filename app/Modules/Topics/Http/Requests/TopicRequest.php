@@ -24,8 +24,14 @@ class TopicRequest extends FormRequest
      */
     public function rules()
     {
+        $name_rule = 'required|string|unique:topics,name';
+
+        if ($this->route()->getName() == 'api.topics.update') {
+            $name_rule = 'required|string|unique:topics,name,' . $this->topic . ',id';
+        }
+
         return [
-            'name'        => 'required|string|min:1',
+            'name'        => $name_rule,
             'description' => 'nullable|string',
         ];
     }

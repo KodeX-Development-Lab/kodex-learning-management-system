@@ -12,7 +12,7 @@ class LanguageService
             $languages = Language::query();
 
             if ($request->has('search') && !empty($request->search)) {
-                $languages = $languages->where('name', 'like', '%' . $request->search . '%');
+                $languages = $languages->where('name', 'LIKE', '%' . $request->search . '%');
             }
 
             $languages = $languages->paginate($request->get('per_page', 10));
@@ -52,14 +52,13 @@ class LanguageService
         }
     }
 
-    public function store($request, $language, $user)
+    public function store($request, $user)
     {
         try {
-            // dd($user);
             $language = Language::create([
-                'name'          => $request->name,
-                'code'          => $request->code,
-                'created_by' => $user,
+                'name'       => $request->name,
+                'code'       => $request->code,
+                'created_by' => $user->id,
             ]);
 
             return response()->json([
@@ -78,21 +77,16 @@ class LanguageService
         }
     }
 
-    public function update($request, $language, $user)
+    public function update($language, $request, $user)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|unique:languages,name,' . $language->id,
-                'code' => 'required|string|unique:languages,code,' . $language->id,
-            ]);
-    
             $language->update([
-                'name' => $request->name,
-                'code' => $request->code,
-                'updated_by'  => $user,
+                'name'       => $request->name,
+                'code'       => $request->code,
+                'updated_by' => $user,
 
             ]);
-    
+
             return response()->json([
                 "status"  => true,
                 "data"    => [
@@ -100,8 +94,7 @@ class LanguageService
                 ],
                 "message" => "Language updated successfully",
             ], 200);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 "status"  => false,
                 "data"    => null,
