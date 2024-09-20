@@ -16,10 +16,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignUuid('professional_field_id')->constrained()->onDelete('cascade');
-            $table->integer('work_experience_year');
-            $table->integer('teaching_experience_year');
+            $table->integer('work_experience_years');
+            $table->integer('teaching_experience_years');
             $table->enum('status', array_column(InstructorStatus::cases(), 'value'))->default('Pending');
-            $table->integer('acted_by')->default(0);
+            $table->uuid('acted_by')->nullable();
             $table->dateTime('acted_at')->nullable();
             $table->timestamps();
         });

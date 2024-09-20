@@ -62,8 +62,8 @@ class InstructorService
         $instructor_detail = InstructorDetail::create([
             'user_id'                  => $user->id,
             'professional_field_id'    => $request->professional_field_id,
-            'work_experience_year'     => $request->work_experience_year,
-            'teaching_experience_year' => $request->teaching_experience_year,
+            'work_experience_years'     => $request->work_experience_years,
+            'teaching_experience_years' => $request->teaching_experience_years,
             'status'                   => InstructorStatus::PENDING->value,
         ]);
 
@@ -84,8 +84,8 @@ class InstructorService
         InstructorDetail::where('id', $instructor_detail->id)->update([
             'user_id'                  => $user->id,
             'professional_field_id'    => $request->professional_field_id,
-            'work_experience_year'     => $request->work_experience_year,
-            'teaching_experience_year' => $request->teaching_experience_year,
+            'work_experience_years'     => $request->work_experience_years,
+            'teaching_experience_years' => $request->teaching_experience_years,
             'status'                   => InstructorStatus::PENDING->value,
         ]);
 

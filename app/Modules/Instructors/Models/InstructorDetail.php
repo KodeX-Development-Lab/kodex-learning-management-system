@@ -18,8 +18,8 @@ class InstructorDetail extends Model
     protected $fillable = [
         'user_id',
         'professional_field_id',
-        'work_experience_year',
-        'teaching_experience_year',
+        'work_experience_years',
+        'teaching_experience_years',
         'status',
         'acted_by',
         'acted_at',

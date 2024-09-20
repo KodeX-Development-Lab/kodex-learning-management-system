@@ -21,7 +21,7 @@ class InstructorController extends Controller
         $this->service = $service;
     }
 
-    public function index($request)
+    public function index(Request $request)
     {
         $instructors = $this->service->all($request);
 
@@ -90,8 +90,10 @@ class InstructorController extends Controller
         }
     }
 
-    public function statusUpdate(Request $request, InstructorDetail $instructor)
+    public function statusUpdate($id, Request $request)
     {
+        $instructor = InstructorDetail::where('id', $id)->first();
+
         $request->validate([
             'status' => ['required', Rule::in(array_column(InstructorStatus::cases(), 'value'))],
         ]);

@@ -16,17 +16,17 @@ class InstructorResource extends JsonResource
     {
 
         return [
-            "id"                       => $this->id,
-            "user"                     => $this->user,
-            'professional_field'       => $this->professionalField,
-            'work_experience_year'     => $this->work_experience_year,
-            'teaching_experience_year' => $this->teaching_experience_year,
-            'status'                   => $this->status,
-            'approve_option'           => $this->approve_option,
-            'reject_option'            => $this->reject_option,
-            "certificates"             => $this->certificates,
-            "created_at"               => $this->created_at,
-            "updated_at"               => $this->updated_at,
+            "id"                        => $this->id,
+            "user"                      => $this->user,
+            'professional_field'        => $this->professionalField,
+            'work_experience_years'     => $this->work_experience_years,
+            'teaching_experience_years' => $this->teaching_experience_years,
+            'status'                    => $this->status,
+            'approve_option'            => $this->approve_option,
+            'reject_option'             => $this->reject_option,
+            "certificates"              => $this->certificates,
+            "created_at"                => $this->created_at,
+            "updated_at"                => $this->updated_at,
         ];
     }
 }
