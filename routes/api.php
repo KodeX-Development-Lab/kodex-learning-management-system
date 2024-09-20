@@ -8,6 +8,7 @@ use App\Modules\Course\Http\Controller\CourseController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
+use App\Modules\Storage\Http\Controllers\Api\FileUploadController;
 use App\Modules\User\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,8 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
     Route::resource('roles', RoleController::class)->middleware('CheckAdmin');
     Route::resource('professional-fields', ProfessionalFieldController::class);
 
+    Route::post('file-uploads', [FileUploadController::class, 'store'])->name('file-uploads');
+
     Route::post('become-instructor', [InstructorController::class, 'becomeInstructor'])->name('instructors.become');
     Route::get('instructors', [InstructorController::class, 'index'])->name('instructors.index');
     Route::patch('instructors/{id}/status', [InstructorController::class, 'statusUpdate'])->middleware('CheckAdmin');
@@ -62,15 +65,15 @@ Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instruc
 /** Leanrer Side */
 Route::prefix('/v1')->middleware(['auth:sanctum'])->name('learner-side.')->group(function () {
     /** Course List, Detail, Enroll */
-    Route::get('home/courses', CourseFaqController::class);
-    Route::get('home/courses/{id}', CourseFaqController::class);
-    Route::get('home/courses/{id}', CourseFaqController::class);
-    Route::get('home/courses/{id}/content', CourseFaqController::class);
-    Route::post('home/courses/{id}/enroll', CourseFaqController::class);
+    Route::get('home/courses',[InstructorController::class, 'index']);
+    Route::get('home/courses/{id}',[InstructorController::class, 'index']);
+    Route::get('home/courses/{id}',[InstructorController::class, 'index']);
+    Route::get('home/courses/{id}/content',[InstructorController::class, 'index']);
+    Route::post('home/courses/{id}/enroll',[InstructorController::class, 'index']);
 
     Route::prefix('my-learning')->group(function () {
-        Route::get('', CourseController::class);
-        Route::get('courses/{course_id}/lessons/{lesson_id}', CourseFaqController::class);
-        Route::post('courses/{course_id}/lessons/{lesson_id}/complete', CourseFaqController::class);
+        Route::get('', [InstructorController::class, 'index']);
+        Route::get('courses/{course_id}/lessons/{lesson_id}',[InstructorController::class, 'index']);
+        Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [InstructorController::class, 'index']);
     });
 });
