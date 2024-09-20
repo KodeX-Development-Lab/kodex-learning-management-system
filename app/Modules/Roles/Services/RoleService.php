@@ -6,6 +6,8 @@ use App\Modules\Roles\Models\Role;
 
 class RoleService
 {
+    const GUARDNAME = 'api';
+
     public function all($request)
     {
         try {
@@ -57,7 +59,7 @@ class RoleService
         try {
             $role = Role::create([
                 'name'       => $request->name,
-                'guard_name' => "api",
+                'guard_name' => self::GUARDNAME,
             ]);
 
             return response()->json([
@@ -82,12 +84,12 @@ class RoleService
             $request->validate([
                 'name' => 'required|string|unique:roles,name,' . $role->id,
             ]);
-    
+
             $role->update([
                 'name'       => $request->name,
-                'guard_name' => "api",
+                'guard_name' => self::GUARDNAME,
             ]);
-    
+
             return response()->json([
                 "status"  => true,
                 "data"    => [
@@ -95,8 +97,7 @@ class RoleService
                 ],
                 "message" => "Role updated successfully",
             ], 200);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 "status"  => false,
                 "data"    => null,

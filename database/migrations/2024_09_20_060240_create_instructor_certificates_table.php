@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_faqs', function (Blueprint $table) {
+        Schema::create('instructor_certificates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('course_id')->constrained('courses')->onUpdate('cascade')->onDelete('cascade');
-            $table->text('question');
-            $table->text('answer');
-            $table->integer('order')->default(0);
+            $table->foreignUuid('instructor_detail_id')->constrained('instructor_details')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('title');
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_faqs');
+        Schema::dropIfExists('instructor_certificates');
     }
 };

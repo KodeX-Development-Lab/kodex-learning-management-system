@@ -9,15 +9,31 @@ class ProfessionalFieldService
 {
     public function all($request)
     {
-        $keyword = $request->search ? $request->search : '';
-        $limit   = $request->limit ? $request->limit : 10;
+        $keyword  = $request->search ? $request->search : '';
+        $per_page = $request->per_page ? $request->per_page : 10;
 
-        $topics = ProfessionalField::where(function ($query) use ($keyword) {
-            $query->where('name', 'LIKE', "%$keyword%");
-        })
-            ->paginate($limit);
+        $data = ProfessionalField::where(function ($query) use ($keyword) {
+            if ($keyword != '') {
+                $query->where('name', 'LIKE', "%$keyword%");
+            }
+        });
 
-        return $topics;
+        if ($request->sort != null && $request->sort != '') {
+            $sorts = explode(',', $request->input('sort', ''));
+
+            foreach ($sorts as $sortColumn) {
+                $sortDirection = Str::startsWith($sortColumn, '-') ? 'DESC' : 'ASC';
+                $sortColumn    = ltrim($sortColumn, '-');
+
+                $data->orderBy($sortColumn, $sortDirection);
+            }
+        } else {
+            $data->orderBy('created_at', 'DESC');
+        }
+
+        $data = $data->paginate($per_page);
+
+        return $data;
     }
 
     public function get($id)

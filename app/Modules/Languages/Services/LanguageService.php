@@ -16,6 +16,19 @@ class LanguageService
                 $languages = $languages->where('name', 'LIKE', '%' . $request->search . '%');
             }
 
+            if ($request->sort != null && $request->sort != '') {
+                $sorts = explode(',', $request->input('sort', ''));
+
+                foreach ($sorts as $sortColumn) {
+                    $sortDirection = Str::startsWith($sortColumn, '-') ? 'DESC' : 'ASC';
+                    $sortColumn    = ltrim($sortColumn, '-');
+
+                    $languages->orderBy($sortColumn, $sortDirection);
+                }
+            } else {
+                $languages->orderBy('created_at', 'DESC');
+            }
+
             $languages = $languages->paginate($request->get('per_page', 10));
 
             return response()->json([
@@ -58,7 +71,7 @@ class LanguageService
         try {
             $language = Language::create([
                 'name'       => $request->name,
-                'slug'        => Str::slug($request->name),
+                'slug'       => Str::slug($request->name),
                 'code'       => $request->code,
                 'created_by' => $user->id,
             ]);
@@ -84,7 +97,7 @@ class LanguageService
         try {
             $language->update([
                 'name'       => $request->name,
-                'slug'        => Str::slug($request->name),
+                'slug'       => Str::slug($request->name),
                 'code'       => $request->code,
                 'updated_by' => $user,
 

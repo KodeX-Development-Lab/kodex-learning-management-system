@@ -10,5 +10,7 @@ class ProfessionalField extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['name','slug', 'description'];
+    protected $table = 'professional_fields';
+
+    protected $fillable = ['name', 'slug', 'description'];
 }

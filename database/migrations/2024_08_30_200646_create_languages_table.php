@@ -15,10 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->string('code',255)->unique();
-            $table->unsignedBigInteger('created_by')->default(0);
-            $table->unsignedBigInteger('updated_by')->default(0);
+            $table->string('code', 255)->unique();
+            $table->uuid('created_by')->nullable();
+            $table->uuid('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

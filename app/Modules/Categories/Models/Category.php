@@ -11,11 +11,8 @@ class Category extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'categories';
+
     protected $fillable = [
         'name',
         'slug',

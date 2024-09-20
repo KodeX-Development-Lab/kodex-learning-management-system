@@ -1,10 +1,8 @@
 <?php
 
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
-use App\Modules\Auth\Http\Controllers\Api\InstructorController;
 use App\Modules\Categories\Http\Controllers\Api\CategoryController;
-use App\Modules\CourseFaq\Http\Controller\Api\CourseFaqController;
-use App\Modules\Course\Http\Controller\CourseController;
+use App\Modules\Instructors\Http\Controllers\Api\InstructorController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
@@ -32,48 +30,55 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('/v1/auth')->name('api.auth.')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::get('/user', [AuthController::class, 'getAuthUser'])->middleware('auth:sanctum');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('changePassword');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/user', [AuthController::class, 'getAuthUser'])->middleware('auth:sanctum');
+        Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum')->name('changePassword');
+    });
 });
 
+/** General APIs */
 Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function () {
-    Route::resource('users', UserController::class);
-    Route::resource('roles', RoleController::class)->middleware('CheckAdmin');
-    Route::resource('professional-fields', ProfessionalFieldController::class);
-
     Route::post('file-uploads', [FileUploadController::class, 'store'])->name('file-uploads');
-
     Route::post('become-instructor', [InstructorController::class, 'becomeInstructor'])->name('instructors.become');
-    Route::get('instructors', [InstructorController::class, 'index'])->name('instructors.index');
-    Route::patch('instructors/{id}/status', [InstructorController::class, 'statusUpdate'])->middleware('CheckAdmin');
 
-    /** Course Related Data */
-    Route::resource('categories', CategoryController::class);
-    Route::resource('languages', LanguageController::class);
-    Route::resource('topics', CategoryController::class);
+    Route::middleware('admin')->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class)->middleware('CheckAdmin');
+        Route::resource('professional-fields', ProfessionalFieldController::class);
+
+        Route::get('instructors', [InstructorController::class, 'index'])->name('instructors.index');
+        Route::patch('instructors/{id}/status', [InstructorController::class, 'statusUpdate'])->middleware('CheckAdmin');
+
+        /** Course Related Data */
+        Route::resource('categories', CategoryController::class);
+        Route::resource('languages', LanguageController::class);
+        Route::resource('topics', CategoryController::class);
+    });
+
 });
 
 /** Instructor Dashboard */
-Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instructor'])->name('instructor-dashboard.')->group(function () {
-    Route::resource('courses', CourseController::class);
-    Route::resource('courses/{course_id}/sections', CourseController::class);
-    Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', CourseController::class);
-    Route::resource('courses/{course_id}/faqs', CourseFaqController::class);
-});
+// Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instructor'])->name('api.instructor-dashboard.')->group(function () {
+//     Route::resource('courses', CourseController::class);
+//     Route::resource('courses/{course_id}/sections', CourseController::class);
+//     Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', CourseController::class);
+//     Route::resource('courses/{course_id}/faqs', CourseFaqController::class);
+// });
 
 /** Leanrer Side */
-Route::prefix('/v1')->middleware(['auth:sanctum'])->name('learner-side.')->group(function () {
-    /** Course List, Detail, Enroll */
-    Route::get('home/courses',[InstructorController::class, 'index']);
-    Route::get('home/courses/{id}',[InstructorController::class, 'index']);
-    Route::get('home/courses/{id}',[InstructorController::class, 'index']);
-    Route::get('home/courses/{id}/content',[InstructorController::class, 'index']);
-    Route::post('home/courses/{id}/enroll',[InstructorController::class, 'index']);
+// Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.learner-side.')->group(function () {
+//     /** Course List, Detail, Enroll */
+//     Route::get('home/courses', [InstructorController::class, 'index']);
+//     Route::get('home/courses/{id}', [InstructorController::class, 'index']);
+//     Route::get('home/courses/{id}', [InstructorController::class, 'index']);
+//     Route::get('home/courses/{id}/content', [InstructorController::class, 'index']);
+//     Route::post('home/courses/{id}/enroll', [InstructorController::class, 'index']);
 
-    Route::prefix('my-learning')->group(function () {
-        Route::get('', [InstructorController::class, 'index']);
-        Route::get('courses/{course_id}/lessons/{lesson_id}',[InstructorController::class, 'index']);
-        Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [InstructorController::class, 'index']);
-    });
-});
+//     Route::prefix('my-learning')->group(function () {
+//         Route::get('', [InstructorController::class, 'index']);
+//         Route::get('courses/{course_id}/lessons/{lesson_id}', [InstructorController::class, 'index']);
+//         Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [InstructorController::class, 'index']);
+//     });
+// });

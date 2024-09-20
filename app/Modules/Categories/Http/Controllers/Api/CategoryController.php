@@ -54,7 +54,7 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    public function update(CategoryRequest $request, Category $category)
+    public function update(Category $category, CategoryRequest $request)
     {
         $user = auth()->user();
 
