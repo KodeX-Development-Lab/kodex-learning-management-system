@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Auth\Http\Requests\LoginRequest;
 use App\Modules\Auth\Http\Requests\RegisterRequest;
+use App\Modules\Storage\Classes\ObjectStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    private $storage;
+
     public function login(LoginRequest $request)
     {
         $request->validated($request->only(['email', 'password']));
@@ -95,12 +98,15 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['name', 'email', 'password']));
 
+        $this->storage = new ObjectStorage();
+        $profile_image = $this->storage->store('profile_images', $request->file('profile_image'));
+
         $user = User::create([
-            'name'     => $request->name,
-            'slug'     => Str::slug($request->name),
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'name'          => $request->name,
+            'slug'          => Str::slug($request->name),
+            'email'         => $request->email,
+            'profile_image' => $profile_image,
+            'password'      => Hash::make($request->password),
         ]);
 
         $user->assignRole('Student');

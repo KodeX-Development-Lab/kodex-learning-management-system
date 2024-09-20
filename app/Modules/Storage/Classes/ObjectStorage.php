@@ -25,6 +25,14 @@ class ObjectStorage implements StorageInterface
         return $url;
     }
 
+    public static function getFilePathFromUrl($url)
+    {
+        $url  = parse_url($url);
+        $path = $url['path'] ?? '';
+
+        return \Str::replace('/uploads/', '', $path);
+    }
+
     public function getUniqueIfHasSameFileName($basename, $same_name_counts)
     {
         $file_name = pathinfo($basename)['filename'];
