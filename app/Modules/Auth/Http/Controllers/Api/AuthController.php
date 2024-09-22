@@ -90,8 +90,12 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['name', 'email', 'password']));
 
-        $this->storage = new ObjectStorage();
-        $profile_image = $this->storage->store('profile_images', $request->file('profile_image'));
+        $profile_image = null;
+
+        if ($request->file('profile_image')) {
+            $this->storage = new ObjectStorage();
+            $profile_image = $this->storage->store('profile_images', $request->file('profile_image'));
+        }
 
         $user = User::create([
             'name'          => $request->name,

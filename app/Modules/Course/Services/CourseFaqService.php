@@ -2,7 +2,7 @@
 
 namespace App\Modules\CourseFaq\Services;
 
-use App\Modules\Models\CourseFaq;
+use App\Modules\Course\Models\CourseFaq;
 
 class CourseFaqService
 {
@@ -12,6 +12,7 @@ class CourseFaqService
             $query->orWhere('question', 'like', '%' . request('key') . '%');
             $query->orWhere('answer', 'like', '%' . request('key') . '%');
         });
+
         return $courseFaq;
     }
 
@@ -41,8 +42,10 @@ class CourseFaqService
             'answer'    => $request->answer,
             'order'     => $request->order ?? 0,
         ]);
+        
         return $courseFaq;
     }
+
     public function delete($courseFaq)
     {
         $courseFaq->delete();

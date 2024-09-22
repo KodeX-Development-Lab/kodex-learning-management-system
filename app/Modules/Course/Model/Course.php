@@ -20,11 +20,11 @@ class Course extends Model
     ];
 
     protected $casts = [
-        'category_ids' => 'array',
-        'language_ids' => 'array',
-        'useful_links' => 'array',
-        'preview' => 'boolean',
-        'is_published' => 'boolean',
+        'category_ids'    => 'array',
+        'language_ids'    => 'array',
+        'useful_links'    => 'array',
+        'preview'         => 'boolean',
+        'is_published'    => 'boolean',
         'last_updated_at' => 'datetime',
     ];
 
@@ -32,6 +32,7 @@ class Course extends Model
     {
         return $this->hasMany(Category::class, 'id', 'category_ids');
     }
+    
     public function languages()
     {
         return $this->hasMany(Language::class, 'id', 'language_ids');
@@ -40,6 +41,11 @@ class Course extends Model
     public function instructor()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class, 'course_id', 'id');
     }
 
     public function scopeFilter($query, $filter)

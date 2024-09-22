@@ -67,9 +67,11 @@ class Kernel extends HttpKernel
     ];
 
     protected $routeMiddleware = [
-        'CheckAdmin' => \App\Http\Middleware\CheckAdminMiddleware::class,
-        'admin'      => \App\Http\Middleware\CheckAdminMiddleware::class,
-        'instructor' => \App\Http\Middleware\CheckInstructorMiddleware::class,
+        'CheckAdmin'      => \App\Http\Middleware\CheckAdminMiddleware::class,
+        'admin'           => \App\Http\Middleware\CheckAdminMiddleware::class,
+        'instructor'      => \App\Http\Middleware\CheckInstructorMiddleware::class,
+        'course.owner'    => \App\Http\Middleware\CheckCourseOwnerMiddleware::class,
+        'course.enrolled' => \App\Http\Middleware\CheckCourseEnrolledMiddleware::class,
     ];
 
 }

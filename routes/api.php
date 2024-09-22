@@ -2,8 +2,14 @@
 
 use App\Modules\Auth\Http\Controllers\Api\AuthController;
 use App\Modules\Categories\Http\Controllers\Api\CategoryController;
+use App\Modules\Course\Http\Controller\Api\CourseFaqController;
+use App\Modules\Course\Http\Controller\CourseController;
+use App\Modules\Course\Http\Controller\LessonController;
+use App\Modules\Course\Http\Controller\SectionController;
 use App\Modules\Instructors\Http\Controllers\Api\InstructorController;
 use App\Modules\Languages\Http\Controllers\Api\LanguageController;
+use App\Modules\LearnerSide\Http\Controller\LeanerSideHomeController;
+use App\Modules\LearnerSide\Http\Controller\MyLearningController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
 use App\Modules\Storage\Http\Controllers\Api\FileUploadController;
@@ -60,25 +66,24 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
 });
 
 /** Instructor Dashboard */
-// Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instructor'])->name('api.instructor-dashboard.')->group(function () {
-//     Route::resource('courses', CourseController::class);
-//     Route::resource('courses/{course_id}/sections', CourseController::class);
-//     Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', CourseController::class);
-//     Route::resource('courses/{course_id}/faqs', CourseFaqController::class);
-// });
+Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instructor'])->name('api.instructor-dashboard.')->group(function () {
+    Route::resource('courses', CourseController::class);
+    Route::resource('courses/{course_id}/sections', SectionController::class)->middleware('course.owner');
+    Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', LessonController::class)->middleware('course.owner');
+    Route::resource('courses/{course_id}/faqs', CourseFaqController::class)->middleware('course.owner');
+});
 
 /** Leanrer Side */
-// Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.learner-side.')->group(function () {
-//     /** Course List, Detail, Enroll */
-//     Route::get('home/courses', [InstructorController::class, 'index']);
-//     Route::get('home/courses/{id}', [InstructorController::class, 'index']);
-//     Route::get('home/courses/{id}', [InstructorController::class, 'index']);
-//     Route::get('home/courses/{id}/content', [InstructorController::class, 'index']);
-//     Route::post('home/courses/{id}/enroll', [InstructorController::class, 'index']);
+Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.learner-side.')->group(function () {
+    /** Course List, Detail, Enroll */
+    Route::get('home/courses', [LeanerSideHomeController::class, 'index'])->name('courses.index');
+    Route::get('home/courses/{id}', [LeanerSideHomeController::class, 'courseDetail'])->name('courses.show');
+    Route::get('home/courses/{id}/content', [LeanerSideHomeController::class, 'courseContent'])->name('courses.content');
+    Route::post('home/courses/{id}/enroll', [LeanerSideHomeController::class, 'enroll'])->name('courses.enroll');
 
-//     Route::prefix('my-learning')->group(function () {
-//         Route::get('', [InstructorController::class, 'index']);
-//         Route::get('courses/{course_id}/lessons/{lesson_id}', [InstructorController::class, 'index']);
-//         Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [InstructorController::class, 'index']);
-//     });
-// });
+    Route::prefix('my-learning')->name('my-learning.')->group(function () {
+        Route::get('', [MyLearningController::class, 'index'])->name('index');
+        Route::get('courses/{course_id}/lessons/{lesson_id}', [MyLearningController::class, 'lessonDetail'])->middleware('course.enrolled')->name('lessons.show');
+        Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [MyLearningController::class, 'completeLesson'])->middleware('course.enrolled')->name('lessons.complete');
+    });
+});
