@@ -3,8 +3,8 @@
 namespace App\Modules\Course\Http\Controller;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Course\Http\Requests\SectionRequest;
-use App\Modules\Course\Model\Section;
+use App\Modules\Course\Http\Requests\LessonRequest;
+use App\Modules\Course\Model\Lesson;
 use App\Modules\Course\Services\LessonService;
 use Illuminate\Http\Request;
 
@@ -19,63 +19,63 @@ class LessonController extends Controller
 
     public function index(Request $request)
     {
-        $sections = $this->service->index($request);
+        $lessons = $this->service->index($request);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'sections' => $sections,
+                'lessons' => $lessons,
             ],
-            "message" => "List of Sections",
+            "message" => "List of lessons",
         ], 200);
 
     }
 
-    public function show($slug)
+    public function show($course_id, $section_id, $lesson)
     {
-        $course = $this->service->show($slug);
+        $lesson = $this->service->show($lesson);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'course' => $course,
+                'lesson' => $lesson,
             ],
-            "message" => "Section details",
+            "message" => "Lesson details",
         ], 200);
 
     }
 
-    public function store(SectionRequest $request)
+    public function store(LessonRequest $request)
     {
-        $section = $this->service->store($request->validated());
+        $lesson = $this->service->store($request->validated());
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'section' => $section,
+                'lesson' => $lesson,
             ],
             "message" => "Saved successfully",
         ], 201);
 
     }
 
-    public function update(Section $section, SectionRequest $request)
+    public function update($course_id, $section_id, Lesson $lesson, LessonRequest $request)
     {
-        $section = $this->service->update($section, $request->validated());
+        $lesson = $this->service->update($lesson, $request->validated());
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'section' => $section,
+                'lesson' => $lesson,
             ],
             "message" => "Updated successfully",
         ], 200);
 
     }
 
-    public function destroy(Section $section)
+    public function destroy(Lesson $lesson)
     {
-        $section->delete();
+        $this->service->delete($lesson);
 
         return response()->json([], 204);
     }

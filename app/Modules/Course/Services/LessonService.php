@@ -11,18 +11,17 @@ class LessonService
 
     public function index($request)
     {
-        $limit = $request->per_page ? $request->per_page : 10;
+        $data = Lesson::with(['section'])
+            ->where('section_id', $request->section_id)
+            ->orderBy('order')
+            ->get();
 
+        return $data;
     }
 
-    public function show($slug)
+    public function show($id)
     {
-
-    }
-
-    public function get($id)
-    {
-
+        return Lesson::with(['section'])->findOrFail($id);
     }
 
     public function store($request)

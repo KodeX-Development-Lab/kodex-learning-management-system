@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\LearnerSide\Http\Controller;
+namespace App\Modules\LearnerSide\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\LeanerSide\Services\LeanerSideHomeService;
+use App\Modules\LearnerSide\Services\LearnerSideHomeService;
 use Illuminate\Http\Request;
 
-class MyLearningController extends Controller
+class LeanerSideHomeController extends Controller
 {
     protected $service;
 
-    public function __construct(LeanerSideHomeService $service)
+    public function __construct(LearnerSideHomeService $service)
     {
         $this->service = $service;
     }
@@ -27,7 +27,7 @@ class MyLearningController extends Controller
         ], 200);
     }
 
-    public function lessonDetail($slug)
+    public function courseDetail($slug)
     {
         $course = $this->service->show($slug);
         return response()->json([
@@ -40,10 +40,23 @@ class MyLearningController extends Controller
 
     }
 
-    public function completeLesson(Request $request)
+    public function courseContent($slug)
     {
-        $course = $this->service->store($request->validated());
+        $course = $this->service->show($slug);
+        return response()->json([
+            "status"  => true,
+            "data"    => [
+                'course' => $course,
+            ],
+            "message" => "Course details",
+        ], 200);
 
+    }
+
+    public function enroll(Request $request)
+    {
+
+        $course = $this->service->store($request->validated());
         return response()->json([
             "status"  => true,
             "data"    => [

@@ -21,6 +21,8 @@ class SectionRequest extends FormRequest
      */
     public function rules(): array
     {
+        $this->merge(['course_id' => $this->route('course_id')]);
+
         return [
             'course_id'   => 'required|exists:courses,id',
             'title'       => 'required|string',

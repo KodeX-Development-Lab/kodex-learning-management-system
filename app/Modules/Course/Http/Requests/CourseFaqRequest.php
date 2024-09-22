@@ -13,6 +13,8 @@ class CourseFaqRequest extends FormRequest
      */
     public function rule()
     {
+        $this->merge(['course_id' => $this->route('course_id')]);
+
         return [
             'course_id' => 'required|exists:courses,id',
             'question'  => 'required|string|max:255',

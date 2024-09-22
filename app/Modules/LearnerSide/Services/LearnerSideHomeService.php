@@ -1,10 +1,11 @@
 <?php
-namespace App\Modules\LeanerSide\Services;
+
+namespace App\Modules\LearnerSide\Services;
 
 use App\Modules\Course\Model\Course;
 use Illuminate\Support\Str;
 
-class LeanerSideHomeService
+class LearnerSideHomeService
 {
 
     public function index($request)

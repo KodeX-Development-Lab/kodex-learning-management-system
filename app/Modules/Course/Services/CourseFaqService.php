@@ -1,48 +1,46 @@
 <?php
 
-namespace App\Modules\CourseFaq\Services;
+namespace App\Modules\Course\Services;
 
 use App\Modules\Course\Models\CourseFaq;
 
 class CourseFaqService
 {
-    public function all($request)
+    public function index($request)
     {
-        $courseFaq = CourseFaq::when(request('key'), function ($query) {
-            $query->orWhere('question', 'like', '%' . request('key') . '%');
-            $query->orWhere('answer', 'like', '%' . request('key') . '%');
-        });
+        $data = CourseFaq::where('course_id', $request->course_id)
+            ->orderBy('order')
+            ->get();
 
-        return $courseFaq;
+        return $data;
     }
 
     public function get($id)
     {
-        $courseFaq = CourseFaq::where('id', $id)->first();
-
-        return $courseFaq;
+        return CourseFaq::findOrFail($id);
     }
 
-    public function store($request, $course_id)
+    public function store($request)
     {
         $courseFaq = CourseFaq::create([
-            'course_id' => $course_id,
+            'course_id' => $request->course_id,
             'question'  => $request->question,
             'answer'    => $request->answer,
             'order'     => $request->order ?? 0,
         ]);
+
         return $courseFaq;
     }
 
-    public function update($request, $course_id, $courseFaq)
+    public function update($courseFaq, $request)
     {
         $courseFaq->update([
-            'course_id' => $course_id,
+            'course_id' => $request->course_id,
             'question'  => $request->question,
             'answer'    => $request->answer,
             'order'     => $request->order ?? 0,
         ]);
-        
+
         return $courseFaq;
     }
 

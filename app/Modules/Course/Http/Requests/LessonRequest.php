@@ -21,6 +21,9 @@ class LessonRequest extends FormRequest
      */
     public function rules(): array
     {
+        $this->merge(['course_id' => $this->route('course_id')]);
+        $this->merge(['section_id' => $this->route('section_id')]);
+        
         return [
             'course_id'   => 'required|exists:courses,id',
             'section_id'  => 'required|exists:sections,id',

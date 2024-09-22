@@ -31,14 +31,14 @@ class SectionController extends Controller
 
     }
 
-    public function show($slug)
+    public function show($course_id, $id)
     {
-        $course = $this->service->show($slug);
+        $section = $this->service->show($id);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'course' => $course,
+                'section' => $section,
             ],
             "message" => "Section details",
         ], 200);
@@ -75,7 +75,7 @@ class SectionController extends Controller
 
     public function destroy(Section $section)
     {
-        $section->delete();
+        $this->service->delete($section);
 
         return response()->json([], 204);
     }

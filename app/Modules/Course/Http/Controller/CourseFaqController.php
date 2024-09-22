@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Course\Http\Controller\Api;
+namespace App\Modules\Course\Http\Controller;
 
 use App\Http\Controllers\Controller;
 use App\Modules\CourseFaq\Services\CourseFaqService;
@@ -39,9 +39,9 @@ class CourseFaqController extends Controller
         ], 201);
     }
 
-    public function store(CourseFaqRequest $request, $course_id)
+    public function store($course_id, CourseFaqRequest $request)
     {
-        $faq = $this->service->store($request, $course_id);
+        $faq = $this->service->store($request);
 
         return response()->json([
             'status'  => true,
@@ -52,9 +52,9 @@ class CourseFaqController extends Controller
         ]);
     }
 
-    public function update(CourseFaqRequest $request, CourseFaq $courseFaq, $course_id)
+    public function update($course_id, CourseFaq $courseFaq, CourseFaqRequest $request)
     {
-        $faq = $this->service->update($courseFaq, $request, $course_id);
+        $faq = $this->service->update($courseFaq, $request);
 
         return response()->json([
             'status'  => true,
