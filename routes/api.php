@@ -77,8 +77,8 @@ Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instruc
 Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.learner-side.')->group(function () {
     /** Course List, Detail, Enroll */
     Route::get('home/courses', [LeanerSideHomeController::class, 'index'])->name('courses.index');
-    Route::get('home/courses/{course_id}', [LeanerSideHomeController::class, 'courseDetail'])->name('courses.show');
-    Route::get('home/courses/{course_id}/content', [LeanerSideHomeController::class, 'courseContent'])->name('courses.content');
+    Route::get('home/courses/{slug}', [LeanerSideHomeController::class, 'courseDetail'])->name('courses.show');
+    Route::get('home/courses/{slug}/content', [LeanerSideHomeController::class, 'courseContent'])->name('courses.content');
     Route::post('home/courses/{course_id}/enroll', [LeanerSideHomeController::class, 'enroll'])->name('courses.enroll');
 
     Route::prefix('my-learning')->name('my-learning.')->group(function () {

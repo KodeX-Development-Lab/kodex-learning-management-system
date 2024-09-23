@@ -4,6 +4,7 @@ namespace App\Modules\Course\Model;
 use App\Models\User;
 use App\Modules\Categories\Models\Category;
 use App\Modules\Languages\Models\Language;
+use App\Modules\Storage\Classes\ObjectStorage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,11 +29,22 @@ class Course extends Model
         'last_updated_at' => 'datetime',
     ];
 
+    public function getThumbnailAttribute($value)
+    {
+        $result = null;
+
+        if ($value != null) {
+            $result = ObjectStorage::getUrl($value);
+        }
+
+        return $result;
+    }
+
     public function categories()
     {
         return $this->hasMany(Category::class, 'id', 'category_ids');
     }
-    
+
     public function languages()
     {
         return $this->hasMany(Language::class, 'id', 'language_ids');
@@ -46,6 +58,11 @@ class Course extends Model
     public function sections()
     {
         return $this->hasMany(Section::class, 'course_id', 'id');
+    }
+
+    public function lessons()
+    {
+        return $this->hasManyThrough(Lesson::class, Section::class);
     }
 
     public function scopeFilter($query, $filter)
