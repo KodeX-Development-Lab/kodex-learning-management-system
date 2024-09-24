@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Course\Model;
 
+use App\Models\Section;
 use App\Models\User;
 use App\Modules\Categories\Models\Category;
 use App\Modules\Languages\Models\Language;
@@ -40,6 +41,11 @@ class Course extends Model
     public function instructor()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
     }
 
     public function scopeFilter($query, $filter)
