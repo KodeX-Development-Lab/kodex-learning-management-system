@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('enrollmentID')->unique()->nullable();
-            $table->foreignUuid('course_id')->references('courses')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->references('users')->cascadeOnUpdate()->cascadeOnDelete();
+            // $table->string('enrollmentID')->unique()->nullable();
+            $table->foreignUuid('course_id')->constrained('courses')->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('enrolled_at')->nullable();
             $table->boolean('is_completed')->default(false);
             $table->dateTime('completed_at')->nullable();

@@ -4,8 +4,8 @@ namespace App\Modules\Course\Http\Controller;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
-use App\Http\Requests\CourseUpdateRequest;
 use App\Modules\Course\Http\Resources\CourseDetailResource;
+use App\Modules\Course\Model\Course;
 use App\Modules\Course\Services\CourseService;
 use Illuminate\Http\Request;
 
@@ -67,26 +67,32 @@ class InstructorCourseController extends Controller
 
     public function store(CourseRequest $request)
     {
-        $course = $this->service->store($request->validated());
+        $user = auth()->user();
+
+        $request->merge([
+            'user_id' => $user->id,
+        ]);
+
+        $course = $this->service->store($request);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'course' => $course,
+                'course' => new CourseDetailResource($course),
             ],
             "message" => "Course created successfully",
         ], 201);
 
     }
 
-    public function update(CourseUpdateRequest $request, $course)
+    public function update(Course $course, CourseRequest $request)
     {
-        $updatedCourse = $this->service->update($request->validated(), $course);
+        $course = $this->service->update($course, $request);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'course' => $updatedCourse,
+                'course' => new CourseDetailResource($course),
             ],
             "message" => "Course updated successfully",
         ], 200);

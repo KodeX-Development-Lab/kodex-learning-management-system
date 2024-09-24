@@ -36,7 +36,9 @@ class FileUploadController extends Controller
         } else {
             return response()->json([
                 'status'  => false,
-                'data'    => null,
+                'data'    => [
+                    'url' => null,
+                ],
                 'message' => "Fail",
             ], 500);
         }

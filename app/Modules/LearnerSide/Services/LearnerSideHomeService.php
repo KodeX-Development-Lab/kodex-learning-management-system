@@ -6,6 +6,7 @@ use App\Modules\Course\Http\Resources\CourseContentResource;
 use App\Modules\Course\Http\Resources\CourseListResource;
 use App\Modules\Course\Model\Course;
 use App\Modules\Course\Model\Section;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LearnerSideHomeService
@@ -15,7 +16,7 @@ class LearnerSideHomeService
         $keyword  = $request->search ? $request->search : '';
         $per_page = $request->per_page ? $request->per_page : 10;
 
-        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name'])
+        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name'])
             ->withCount(['sections', 'lessons', 'students'])
             ->where(function ($query) use ($request, $keyword) {
                 if ($request->category != null && strtolower($request->category) != 'all') {
@@ -34,7 +35,6 @@ class LearnerSideHomeService
                     });
                 }
             })
-            ->select('id', 'title', 'description', 'thumbnail', 'total_time')
             ->latest()
             ->paginate($per_page);
 
@@ -51,7 +51,7 @@ class LearnerSideHomeService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students:id,name', 'sections.lessons'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'sections.lessons'])
             ->withCount(['sections', 'lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();
@@ -83,8 +83,9 @@ class LearnerSideHomeService
     public function enrollCourse($user, $course_id)
     {
         DB::table('enrollments')->insert([
-            'course_id' => $course_id,
-            'user_id'   => $user->id,
+            'course_id'   => $course_id,
+            'user_id'     => $user->id,
+            'enrolled_at' => Carbon::now(),
         ]);
 
         return;

@@ -70,7 +70,7 @@ Route::prefix('/v1/instructor-dashboard/')->middleware(['auth:sanctum', 'instruc
     Route::resource('courses', InstructorCourseController::class);
     Route::get('courses/{course_id}/students', [InstructorCourseController::class, 'getStudents'])->name('course.students')->middleware('course.owner');
     Route::resource('courses/{course_id}/sections', SectionController::class)->middleware('course.owner');
-    Route::resource('courses/{course_id}/sections/{section_id}/{lessons}', LessonController::class)->middleware('course.owner');
+    Route::resource('courses/{course_id}/sections/{section_id}/lessons', LessonController::class)->middleware('course.owner');
     Route::resource('courses/{course_id}/faqs', CourseFaqController::class)->middleware('course.owner');
 });
 

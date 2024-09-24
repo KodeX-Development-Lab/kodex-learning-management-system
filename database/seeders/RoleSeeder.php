@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Modules\Course\Model\Course;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,26 +31,6 @@ class RoleSeeder extends Seeder
             'password' => Hash::make('admin1234'),
         ]);
 
-        $user->assignRole('Admin');
-
-        Course::create(['id' => (string) Str::uuid(),
-            'title'              => 'Introduction to Programming',
-            'slug'               => 'introduction-to-programming',
-            'user_id'            => $user->id,
-            'category_ids'       => json_encode(['1', '2']),
-            'language_ids'       => json_encode(['3']),
-            'what_will_learn'    => 'Basics of programming and problem-solving techniques.',
-            'requirement'        => 'No prior knowledge required.',
-            'description'        => 'This course covers the fundamental concepts of programming with hands-on exercises.',
-            'for_whom'           => 'Beginners interested in learning programming.',
-            'thumbnail'          => 'path/to/thumbnail.jpg',
-            'preview'            => 1,
-            'total_time'         => 30,
-            'level'              => 'Beginner',
-            'last_updated_at'    => now(),
-            'is_published'       => 1,
-            'useful_links'       => json_encode(['https://example.com']),
-            'created_at'         => now(),
-            'updated_at'         => now()]);
+        $user->assignRole(['Admin', 'Instructor', 'Student']);
     }
 }

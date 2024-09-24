@@ -11,7 +11,7 @@ class Lesson extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = "sections";
+    protected $table = "lessons";
 
     protected $fillable = [
         'section_id',

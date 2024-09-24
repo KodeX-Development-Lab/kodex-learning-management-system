@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Modules\Course\Model\Course;
+use App\Modules\Storage\Classes\ObjectStorage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,8 +49,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
+
+    public function getProfileImageAttribute($value)
+    {
+        $result = null;
+
+        if ($value != null) {
+            $result = ObjectStorage::getUrl($value);
+        }
+
+        return $result;
+    }
 
     public function scopeFilter($query, $filter)
     {

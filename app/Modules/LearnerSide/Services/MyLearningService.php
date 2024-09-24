@@ -34,7 +34,6 @@ class MyLearningService
                     });
                 }
             })
-            ->select('id', 'title', 'description', 'thumbnail', 'total_time')
             ->latest()
             ->paginate($per_page);
 

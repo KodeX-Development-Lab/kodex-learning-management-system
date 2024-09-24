@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Modules\Categories\Models\Category;
 use App\Modules\Languages\Models\Language;
 use App\Modules\Storage\Classes\ObjectStorage;
+use App\Modules\Topics\Models\Topic;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,20 +15,31 @@ class Course extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'title', 'slug', 'user_id', 'category_ids', 'language_ids',
-        'what_will_learn', 'requirement', 'description', 'for_whom',
-        'thumbnail', 'preview', 'last_updated_at', 'level', 'is_published',
-        'useful_links', 'total_time',
+        'title',
+        'slug',
+        'user_id',
+        'category_id',
+        'language_id',
+        'description',
+        'what_will_learn',
+        'requirements',
+        'details',
+        'for_whom',
+        'thumbnail',
+        'preview_video_url',
+        'level',
+        'is_published',
+        'useful_links',
+        'total_time_minutes',
+        'last_updated_at',
     ];
 
     protected $casts = [
-        'category_ids'    => 'array',
-        'language_ids'    => 'array',
-        'useful_links'    => 'array',
-        'preview'         => 'boolean',
-        'is_published'    => 'boolean',
-        'last_updated_at' => 'datetime',
+        'useful_links' => 'array',
+        'is_published' => 'boolean',
     ];
+
+    protected $appends = ['total_time_minutes_text'];
 
     public function getThumbnailAttribute($value)
     {
@@ -40,14 +52,36 @@ class Course extends Model
         return $result;
     }
 
-    public function categories()
+    public function getTotalTimeMinutesTextAttribute()
     {
-        return $this->hasMany(Category::class, 'id', 'category_ids');
+        if ($this->total_time_minutes == 0) {
+            return "0 min";
+        }
+
+        $hours   = floor($this->total_time_minutes / 60);
+        $minutes = $this->total_time_minutes % 60;
+
+        return $hours . "h " . ($minutes < 9 ? "0$minutes" : $minutes) . "min";
     }
 
-    public function languages()
+    public function category()
     {
-        return $this->hasMany(Language::class, 'id', 'language_ids');
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class, 'language_id');
+    }
+
+    public function topics()
+    {
+        return $this->belongsToMany(Topic::class, 'course_topic', 'course_id', 'topic_id')->withTimestamps();
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(CourseAttachment::class, 'course_id');
     }
 
     public function instructor()

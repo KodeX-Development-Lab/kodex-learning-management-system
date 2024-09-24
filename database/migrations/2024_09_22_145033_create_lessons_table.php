@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('section_id')->references('sections')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('section_id')->constrained('sections')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('title');
             $table->string('slug');
             $table->text('description')->nullable();

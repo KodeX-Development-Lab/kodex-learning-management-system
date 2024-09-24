@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('course_attachments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('course_id')->constrained('courses')->onDelete('cascade');
-            $table->string('title');
-            $table->string('slug');
-            $table->text('description')->nullable();
-            $table->integer('order')->default(0);
+            $table->foreignUuid('course_id')->constrained('courses')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('name');
+            $table->string('file_type')->nullable();
+            $table->string('path')->nullable();
+            $table->double('size')->default(0.0);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('course_attachments');
     }
 };

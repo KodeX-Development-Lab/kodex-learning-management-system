@@ -4,17 +4,20 @@ namespace App\Modules\Course\Services;
 use App\Models\User;
 use App\Modules\Course\Http\Resources\CourseListResource;
 use App\Modules\Course\Model\Course;
+use App\Modules\Storage\Classes\ObjectStorage;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class CourseService
 {
+    private $storage;
 
     public function index($request)
     {
         $keyword  = $request->search ? $request->search : '';
         $per_page = $request->per_page ? $request->per_page : 10;
 
-        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name'])
+        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name'])
             ->withCount(['lessons', 'students'])
             ->where(function ($query) use ($request, $keyword) {
                 if ($request->category != null && strtolower($request->category) != 'all') {
@@ -33,7 +36,7 @@ class CourseService
                     });
                 }
             })
-            ->select('id', 'title', 'description', 'thumbnail', 'total_time')
+            ->select('courses.*')
             ->latest()
             ->paginate($per_page);
 
@@ -50,10 +53,19 @@ class CourseService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students:id,name', 'sections.lessons'])
-            ->withCount(['sections', 'lessons', 'students'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'sections.lessons'])
+            ->withCount(['lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();
+
+        return $course;
+    }
+
+    public function getById($id)
+    {
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'sections.lessons'])
+            ->withCount(['lessons', 'students'])
+            ->findOrFail($id);
 
         return $course;
     }
@@ -91,23 +103,117 @@ class CourseService
         return $data;
     }
 
-    public function store($validated)
+    public function store($request)
     {
-        $validated['user_id'] = auth()->id();
+        $this->storage = new ObjectStorage();
 
-        $course = Course::create($validated);
+        $thumbnail = $request->file('thumbnail') ? $this->storage->store('courses/thumbnails', $request->file('thumbnail')) : null;
 
-        return $course;
+        $course = Course::create([
+            'title'              => $request->title,
+            'slug'               => Str::slug($request->title),
+            'user_id'            => $request->user_id,
+            'category_id'        => $request->category_id,
+            'language_id'        => $request->language_id,
+            'description'        => $request->description,
+            'what_will_learn'    => $request->what_will_learn,
+            'requirements'       => $request->requirements,
+            'details'            => $request->details,
+            'for_whom'           => $request->for_whom,
+            'thumbnail'          => $thumbnail,
+            'preview_video_url'  => $request->preview_video_url,
+            'level'              => $request->level,
+            'is_published'       => $request->is_published ? true : false,
+            'useful_links'       => $request->useful_links,
+            'total_time_minutes' => $request->total_time_minutes,
+            'last_updated_at'    => Carbon::now(),
+        ]);
+
+        if ($request->topics) {
+            $course->topics()->sync($request->topics);
+        }
+
+        if ($request->attachments) {
+            $attachments = $request->attachments;
+            foreach ($attachments as $key => $attachment) {
+                $url = $this->storage->store('courses/attachments', $attachment);
+
+                $basename  = $attachment->getClientOriginalName();
+                $name      = $basename;
+                $file_type = pathinfo($url)['extension'] ?? '';
+
+                $course->attachments()->create([
+                    'name'      => $name,
+                    'file_type' => $file_type,
+                    'path'      => $url,
+                    'size'      => $attachment->getSize(),
+                ]);
+            }
+        }
+
+        return $this->getById($course->id);
     }
 
-    public function update($validated, $course)
+    public function update($course, $request)
     {
+        $old_thumbnail     = $course->thumbnail;
+        $has_new_thumbnail = false;
 
-        $validated['user_id'] = auth()->id();
-        $validated['slug']    = Str::slug($validated['title']);
+        $thumbnail = $old_thumbnail;
 
-        $course->update($validated);
-        return $course;
+        if ($request->file('thumbnail')) {
+            $thumbnail         = ObjectStorage::getFilePathFromUrl($request->thumbnail);
+            $has_new_thumbnail = true;
+        }
+
+        $course->update([
+            'title'              => $request->title,
+            'slug'               => Str::slug($request->title),
+            // 'user_id'            => $request->user_id,
+            'category_id'        => $request->category_id,
+            'language_id'        => $request->language_id,
+            'description'        => $request->description,
+            'what_will_learn'    => $request->what_will_learn,
+            'requirements'       => $request->requirements,
+            'details'            => $request->details,
+            'for_whom'           => $request->for_whom,
+            'thumbnail'          => $thumbnail,
+            'preview_video_url'  => $request->preview_video_url,
+            'level'              => $request->level,
+            'is_published'       => $request->is_published ? true : false,
+            'useful_links'       => $request->useful_links,
+            'total_time_minutes' => $request->total_time_minutes,
+            'last_updated_at'    => Carbon::now(),
+        ]);
+
+        if ($has_new_thumbnail) {
+            $this->storage = new ObjectStorage();
+            $this->storage->delete($old_thumbnail);
+        }
+
+        if ($request->topics) {
+            $course->topics()->sync($request->topics);
+        }
+
+        if ($request->attachments) {
+            $attachments = $request->attachments;
+            foreach ($attachments as $key => $attachment) {
+                $url = $this->storage->store('courses/attachments', $attachment);
+
+                $basename  = $attachment->getClientOriginalName();
+                $name      = $basename;
+                $file_type = pathinfo($url)['extension'] ?? '';
+
+                $course->attachments()->create([
+                    'name'      => $name,
+                    'file_type' => $file_type,
+                    'path'      => $url,
+                    'size'      => $attachment->getSize(),
+                ]);
+            }
+        }
+
+        return $this->getById($course->id);
     }
 
     public function delete($course)
