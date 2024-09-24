@@ -43,9 +43,9 @@ class LeanerSideHomeController extends Controller
 
     }
 
-    public function courseContent($slug)
+    public function getCourseContent($slug)
     {
-        $content = $this->service->show($slug);
+        $content = $this->service->getCourseContent($slug);
 
         return response()->json([
             "status"  => true,
@@ -56,17 +56,22 @@ class LeanerSideHomeController extends Controller
         ], 200);
     }
 
-    public function enroll(Request $request)
+    public function enrollCourse($course_id)
     {
-        $course = $this->service->store($request->validated());
+        $user = auth()->user();
+
+        if ($this->service->checkAlreadyEnrolled($user, $course_id)) {
+            return response()->json([
+                "status"  => false,
+                "message" => "Already Enrolled",
+            ], 400);
+        }
+
+        $this->service->enrollCourse($user, $course_id);
 
         return response()->json([
             "status"  => true,
-            "data"    => [
-                'course' => $course,
-            ],
             "message" => "Enrolled successfully",
         ], 201);
-
     }
 }

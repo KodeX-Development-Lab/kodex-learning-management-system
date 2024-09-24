@@ -14,14 +14,18 @@ class CourseDetailResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = auth()->user();
+
         return [
             "id"               => $this->id,
-            "is_instructor"    => $this->is_instructor ?? false,
-            "already_enrolled" => $this->already_enrolled ?? false,
+            "is_instructor"    => $this->user_id == $user->id ? true : false,
+            "already_enrolled" => in_array($user->id, $this->students->pluck('id')->toArray()) ? true : false,
             "instructor"       => $this->instructor,
             "title"            => $this->title,
             "slug"             => $this->slug,
             "thumbnail"        => $this->thumbnail,
+            "lessons_count"    => $this->lessons_count ?? 0,
+            "students_count"   => $this->students_count ?? 0,
             "level"            => $this->level,
             "category"         => $this->category,
             "language"         => $this->language,

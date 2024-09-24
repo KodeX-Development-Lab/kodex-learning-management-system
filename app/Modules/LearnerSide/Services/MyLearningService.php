@@ -2,13 +2,13 @@
 
 namespace App\Modules\LearnerSide\Services;
 
-use App\Modules\Course\Http\Resources\CourseContentResource;
 use App\Modules\Course\Http\Resources\CourseListResource;
 use App\Modules\Course\Model\Course;
-use App\Modules\Course\Model\Section;
+use App\Modules\Course\Model\Lesson;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class LearnerSideHomeService
+class MyLearningService
 {
     public function index($request)
     {
@@ -16,7 +16,7 @@ class LearnerSideHomeService
         $per_page = $request->per_page ? $request->per_page : 10;
 
         $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name'])
-            ->withCount(['sections', 'lessons', 'students'])
+            ->withCount(['lessons'])
             ->where(function ($query) use ($request, $keyword) {
                 if ($request->category != null && strtolower($request->category) != 'all') {
                     $query->where('category_id', $request->category);
@@ -49,42 +49,30 @@ class LearnerSideHomeService
         return $data;
     }
 
-    public function show($slug)
+    public function lessonDetail($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students', 'sections.lessons'])
-            ->withCount(['sections', 'lessons', 'students'])
+        $course = Lesson::with(['section:id,name'])
             ->where('slug', $slug)
             ->firstOrFail();
 
         return $course;
     }
 
-    public function getCourseContent($slug)
+    public function completeLesson($user, $course_id, $lesson_id)
     {
-        $sections = Section::with([
-            'lessons' => function ($query) {
-                $query->with(['completedUsers:id,name'])->select('lessons.*');
-            },
-        ])
-            ->join('courses', 'courses.id', 'sections.course_id')
-            ->where('courses.slug', $slug)
-            ->select('sections.*')
-            ->groupBy('sections.id')
-            ->get();
+        $record = DB::table('lesson_user')->where('lesson_id', $lesson_id)->where('user_id', $user->id)->first();
 
-        return CourseContentResource::collection($sections);
-    }
+        if ($record) {
+            $record->delete();
+            return;
+        }
 
-    public function checkAlreadyEnrolled($user, $course_id)
-    {
-        return DB::table('lesson_user')->where('course_id', $course_id)->where('user_id', $user->id)->first();
-    }
-
-    public function enrollCourse($user, $course_id)
-    {
-        DB::table('lesson_user')->insert([
-            'course_id' => $course_id,
-            'user_id'   => $user->id,
+        $record = DB::table('lesson_user')->insert([
+            'course_id'  => $course_id,
+            'lesson_id'  => $lesson_id,
+            'user_id'    => $user->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         return;

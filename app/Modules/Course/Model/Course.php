@@ -65,6 +65,11 @@ class Course extends Model
         return $this->hasManyThrough(Lesson::class, Section::class);
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'lesson_user', 'course_id', 'user_id')->withTimestamps();
+    }
+
     public function scopeFilter($query, $filter)
     {
         $query->when($filter['search'] ?? false, function ($query, $search) {

@@ -17,7 +17,9 @@ class CheckCourseEnrolledMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->user()) {
-            if (Course::where('id', $request->course_id)->value('user_id') == auth()->user()->id) {
+            $course = Course::with(['students'])->findOrFail($request->course_id);
+
+            if (in_array(auth()->user(), $course->students->pluck('id')->toArray())) {
                 return $next($request);
             }
         }

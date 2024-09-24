@@ -3,14 +3,14 @@
 namespace App\Modules\LearnerSide\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\LearnerSide\Services\LearnerSideHomeService;
+use App\Modules\LearnerSide\Services\MyLearningService;
 use Illuminate\Http\Request;
 
 class MyLearningController extends Controller
 {
     protected $service;
 
-    public function __construct(LearnerSideHomeService $service)
+    public function __construct(MyLearningService $service)
     {
         $this->service = $service;
     }
@@ -18,6 +18,7 @@ class MyLearningController extends Controller
     public function index(Request $request)
     {
         $courses = $this->service->index($request);
+
         return response()->json([
             "status"  => true,
             "data"    => [
@@ -29,28 +30,26 @@ class MyLearningController extends Controller
 
     public function lessonDetail($slug)
     {
-        $course = $this->service->show($slug);
+        $lesson = $this->service->lessonDetail($slug);
+
         return response()->json([
             "status"  => true,
             "data"    => [
-                'course' => $course,
+                'lesson' => $lesson,
             ],
-            "message" => "Course details",
+            "message" => "Lesson details",
         ], 200);
 
     }
 
-    public function completeLesson(Request $request)
+    public function completeLesson($course_id, $lesson_id)
     {
-        $course = $this->service->store($request->validated());
+        $user = auth()->user();
+        $this->service->completeLesson($user, $course_id, $lesson_id);
 
         return response()->json([
             "status"  => true,
-            "data"    => [
-                'course' => $course,
-            ],
-            "message" => "Course created successfully",
+            "message" => "Lesson Completed",
         ], 201);
-
     }
 }
