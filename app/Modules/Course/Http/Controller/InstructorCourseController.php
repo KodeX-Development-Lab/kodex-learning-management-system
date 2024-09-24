@@ -54,7 +54,7 @@ class InstructorCourseController extends Controller
 
     public function getStudents($course_id, Request $request)
     {
-        $students = $this->service->show($course_id, $request);
+        $students = $this->service->getStudents($course_id, $request);
 
         return response()->json([
             "status"  => true,

@@ -51,7 +51,7 @@ class LearnerSideHomeService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students', 'sections.lessons'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students:id,name', 'sections.lessons'])
             ->withCount(['sections', 'lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();
@@ -77,12 +77,12 @@ class LearnerSideHomeService
 
     public function checkAlreadyEnrolled($user, $course_id)
     {
-        return DB::table('lesson_user')->where('course_id', $course_id)->where('user_id', $user->id)->first();
+        return DB::table('enrollments')->where('course_id', $course_id)->where('user_id', $user->id)->first();
     }
 
     public function enrollCourse($user, $course_id)
     {
-        DB::table('lesson_user')->insert([
+        DB::table('enrollments')->insert([
             'course_id' => $course_id,
             'user_id'   => $user->id,
         ]);

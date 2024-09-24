@@ -67,7 +67,7 @@ class Course extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'lesson_user', 'course_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id')->withTimestamps();
     }
 
     public function scopeFilter($query, $filter)

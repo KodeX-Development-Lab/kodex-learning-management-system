@@ -50,7 +50,7 @@ class CourseService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students', 'sections.lessons'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'students:id,name', 'sections.lessons'])
             ->withCount(['sections', 'lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();
@@ -63,15 +63,15 @@ class CourseService
         $keyword  = $request->search ? $request->search : '';
         $per_page = $request->per_page ? $request->per_page : 10;
 
-        $data = User::join('', '', 'users.id')
-            ->where('.course_id', $course_id)
+        $data = User::join('enrollments', 'enrollments.user_id', 'users.id')
+            ->where('enrollments.course_id', $course_id)
             ->where(function ($query) use ($request, $keyword) {
                 if ($keyword != '') {
                     $query->where('users.name', 'LIKE', "%$keyword%");
                 }
             })
             ->groupBy('users.id')
-            ->select('users.id', 'users.name', ',enrolled_at', '.completed_at');
+            ->select('users.id', 'users.name', 'enrollments.enrolled_at', 'enrollments.completed_at');
 
         if ($request->sort != null && $request->sort != '') {
             $sorts = explode(',', $request->input('sort', ''));
