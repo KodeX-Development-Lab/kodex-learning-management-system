@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Enrollment\Models;
 
 use App\Modules\Course\Model\Course;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -11,7 +11,7 @@ class Enrollment extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['enrollmentID', 'course_id', 'user_id', 'enrolled_at', 'is_completed', 'completed_at'];
+    protected $fillable = ['course_id', 'user_id', 'enrolled_at', 'is_completed', 'completed_at'];
 
     public function student()
     {

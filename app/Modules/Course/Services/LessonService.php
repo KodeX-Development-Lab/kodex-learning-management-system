@@ -34,6 +34,7 @@ class LessonService
         }
 
         $lesson = Lesson::create([
+            'section_id'  => $request->section_id,
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'description' => $request->description,

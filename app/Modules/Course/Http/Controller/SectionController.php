@@ -47,7 +47,7 @@ class SectionController extends Controller
 
     public function store(SectionRequest $request)
     {
-        $section = $this->service->store($request->validated());
+        $section = $this->service->store($request);
 
         return response()->json([
             "status"  => true,
@@ -59,9 +59,9 @@ class SectionController extends Controller
 
     }
 
-    public function update(Section $section, SectionRequest $request)
+    public function update($course_id, Section $section, SectionRequest $request)
     {
-        $section = $this->service->update($section, $request->validated());
+        $section = $this->service->update($section, $request);
 
         return response()->json([
             "status"  => true,

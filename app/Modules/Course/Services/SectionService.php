@@ -29,6 +29,7 @@ class SectionService
     public function store($request)
     {
         $section = Section::create([
+            'course_id'   => $request->course_id,
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'description' => $request->description,

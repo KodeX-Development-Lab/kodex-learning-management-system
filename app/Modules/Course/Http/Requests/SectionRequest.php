@@ -27,7 +27,7 @@ class SectionRequest extends FormRequest
             'course_id'   => 'required|exists:courses,id',
             'title'       => 'required|string',
             'description' => 'nullable|string',
-            'order'       => 'nullable|nemuric|integer|min:0',
+            'order'       => 'nullable|numeric|integer|min:0',
         ];
     }
 }

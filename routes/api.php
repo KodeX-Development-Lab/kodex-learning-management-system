@@ -84,7 +84,7 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.learner-side.')->g
 
     Route::prefix('my-learning')->name('my-learning.')->group(function () {
         Route::get('', [MyLearningController::class, 'index'])->name('index');
-        Route::get('courses/{course_id}/lessons/{lesson_id}', [MyLearningController::class, 'lessonDetail'])->middleware('course.enrolled')->name('lessons.show');
+        Route::get('courses/{course_id}/lessons/{slug}', [MyLearningController::class, 'lessonDetail'])->middleware('course.enrolled')->name('lessons.show');
         Route::post('courses/{course_id}/lessons/{lesson_id}/complete', [MyLearningController::class, 'completeLesson'])->middleware('course.enrolled')->name('lessons.complete');
     });
 });

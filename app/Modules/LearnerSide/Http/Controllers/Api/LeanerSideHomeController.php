@@ -45,14 +45,16 @@ class LeanerSideHomeController extends Controller
 
     public function getCourseContent($slug)
     {
-        $content = $this->service->getCourseContent($slug);
+        $sections = $this->service->getCourseContent($slug);
 
         return response()->json([
             "status"  => true,
             "data"    => [
-                'content' => $content,
+                'content' => [
+                    'sections' => $sections
+                ],
             ],
-            "message" => "Course COntent",
+            "message" => "Course Content",
         ], 200);
     }
 

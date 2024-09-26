@@ -29,9 +29,9 @@ class LessonRequest extends FormRequest
             'section_id'  => 'required|exists:sections,id',
             'title'       => 'required|string',
             'description' => 'nullable|string',
-            'youtube_url' => 'nullable',
-            'attachment'  => 'nullable',
-            'order'       => 'nullable|nemuric|integer|min:0',
+            'youtube_url' => 'nullable|url',
+            'attachment'  => 'nullable|file',
+            'order'       => 'nullable|numeric|integer|min:0',
         ];
     }
 }

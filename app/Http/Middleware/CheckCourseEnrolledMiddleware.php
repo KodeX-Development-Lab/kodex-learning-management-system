@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Modules\Course\Model\Course;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckCourseEnrolledMiddleware
@@ -17,9 +17,9 @@ class CheckCourseEnrolledMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->user()) {
-            $course = Course::with(['students:id,name'])->findOrFail($request->course_id);
+            $already_enrolled = DB::table('enrollments')->where('course_id', $request->course_id)->where('user_id', auth()->user()->id)->first();
 
-            if (in_array(auth()->user(), $course->students->pluck('id')->toArray())) {
+            if ($already_enrolled) {
                 return $next($request);
             }
         }

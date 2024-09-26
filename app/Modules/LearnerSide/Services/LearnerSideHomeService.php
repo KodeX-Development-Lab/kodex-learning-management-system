@@ -6,6 +6,7 @@ use App\Modules\Course\Http\Resources\CourseContentResource;
 use App\Modules\Course\Http\Resources\CourseListResource;
 use App\Modules\Course\Model\Course;
 use App\Modules\Course\Model\Section;
+use App\Modules\Enrollment\Models\Enrollment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -82,7 +83,7 @@ class LearnerSideHomeService
 
     public function enrollCourse($user, $course_id)
     {
-        DB::table('enrollments')->insert([
+        Enrollment::create([
             'course_id'   => $course_id,
             'user_id'     => $user->id,
             'enrolled_at' => Carbon::now(),

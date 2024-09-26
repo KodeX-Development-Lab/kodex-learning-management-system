@@ -28,7 +28,7 @@ class MyLearningController extends Controller
         ], 200);
     }
 
-    public function lessonDetail($slug)
+    public function lessonDetail($course_id, $slug)
     {
         $lesson = $this->service->lessonDetail($slug);
 

@@ -47,7 +47,7 @@ class LessonController extends Controller
 
     public function store(LessonRequest $request)
     {
-        $lesson = $this->service->store($request->validated());
+        $lesson = $this->service->store($request);
 
         return response()->json([
             "status"  => true,

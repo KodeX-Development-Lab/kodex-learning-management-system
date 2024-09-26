@@ -15,7 +15,7 @@ class MyLearningService
         $keyword  = $request->search ? $request->search : '';
         $per_page = $request->per_page ? $request->per_page : 10;
 
-        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name'])
+        $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name'])
             ->withCount(['lessons'])
             ->where(function ($query) use ($request, $keyword) {
                 if ($request->category != null && strtolower($request->category) != 'all') {
@@ -50,7 +50,7 @@ class MyLearningService
 
     public function lessonDetail($slug)
     {
-        $course = Lesson::with(['section:id,name'])
+        $course = Lesson::with(['section:id,title'])
             ->where('slug', $slug)
             ->firstOrFail();
 
