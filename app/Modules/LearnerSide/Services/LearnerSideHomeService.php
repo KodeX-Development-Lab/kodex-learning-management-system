@@ -64,13 +64,14 @@ class LearnerSideHomeService
     {
         $sections = Section::with([
             'lessons' => function ($query) {
-                $query->with(['completedUsers:id,name'])->select('lessons.*');
+                $query->with(['completedUsers:id,name'])->orderBy('order')->select('lessons.*');
             },
         ])
             ->join('courses', 'courses.id', 'sections.course_id')
             ->where('courses.slug', $slug)
             ->select('sections.*')
             ->groupBy('sections.id')
+            ->orderBy('sections.order')
             ->get();
 
         return CourseContentResource::collection($sections);

@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Course\Services;
 
+use App\Modules\Course\Model\Course;
 use App\Modules\Course\Model\Lesson;
 use App\Modules\Storage\Classes\ObjectStorage;
 use Illuminate\Support\Str;
@@ -43,6 +44,9 @@ class LessonService
             'order'       => $request->order,
         ]);
 
+        $course = Course::findOrFail($request->course_id);
+        CourseService::updateLastUpdatedAtTime($course);
+
         return $lesson;
     }
 
@@ -70,6 +74,9 @@ class LessonService
             $this->storage->delete($old_attachment);
         }
 
+        $course = Course::findOrFail($request->course_id);
+        CourseService::updateLastUpdatedAtTime($course);
+
         return $lesson;
     }
 
@@ -81,6 +88,9 @@ class LessonService
             $this->storage = new ObjectStorage();
             $this->storage->delete($lesson->attachment);
         }
+
+        $course = Course::findOrFail($request->course_id);
+        CourseService::updateLastUpdatedAtTime($course);
 
         return true;
     }

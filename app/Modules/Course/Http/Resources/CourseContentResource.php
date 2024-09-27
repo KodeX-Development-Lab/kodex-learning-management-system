@@ -27,8 +27,8 @@ class CourseContentResource extends JsonResource
                     "is_completed" => in_array(auth()->user()->id, $lesson->completedUsers->pluck('id')->toArray()) ? true : false,
                 ];
             }),
+            "order"      => $this->order,
             "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
             "updated_at" => $this->updated_at,
         ];
     }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Course\Services;
 
+use App\Modules\Course\Model\Course;
 use App\Modules\Course\Model\Lesson;
 use App\Modules\Course\Model\Section;
 use App\Modules\Storage\Classes\ObjectStorage;
@@ -28,6 +29,8 @@ class SectionService
 
     public function store($request)
     {
+        $course = Course::findOrFail($request->course_id);
+
         $section = Section::create([
             'course_id'   => $request->course_id,
             'title'       => $request->title,
@@ -36,17 +39,23 @@ class SectionService
             'order'       => $request->order,
         ]);
 
+        CourseService::updateLastUpdatedAtTime($course);
+
         return $section;
     }
 
     public function update($section, $request)
     {
+        $course = Course::findOrFail($request->course_id);
+
         $section->update([
             'title'       => $request->title,
             'slug'        => Str::slug($request->title),
             'description' => $request->description,
             'order'       => $request->order,
         ]);
+
+        CourseService::updateLastUpdatedAtTime($course);
 
         return $section;
     }
@@ -66,6 +75,9 @@ class SectionService
         }
 
         $section->delete();
+
+        $course = Course::findOrFail($request->course_id);
+        CourseService::updateLastUpdatedAtTime($course);
 
         return true;
     }

@@ -216,6 +216,13 @@ class CourseService
         return $this->getById($course->id);
     }
 
+    public static function updateLastUpdatedAtTime($course)
+    {
+        $course->update([
+            'last_updated_at' => Carbon::now(),
+        ]);
+    }
+
     public function delete($course)
     {
         $course->delete();
