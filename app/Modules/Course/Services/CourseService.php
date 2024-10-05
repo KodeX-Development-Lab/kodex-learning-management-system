@@ -57,7 +57,7 @@ class CourseService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'sections.lessons'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'faqs'. 'sections.lessons'])
             ->withCount(['lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();

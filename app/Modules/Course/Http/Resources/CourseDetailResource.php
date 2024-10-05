@@ -42,6 +42,7 @@ class CourseDetailResource extends JsonResource
             "is_published"            => $this->is_published,
             "useful_links"            => $this->useful_links,
             "attachments"             => $this->attachments,
+            "faqs"                    => $this->faqs,
             "created_at"              => $this->created_at,
             "updated_at"              => $this->updated_at,
         ];
