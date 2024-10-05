@@ -8,6 +8,7 @@ use App\Modules\Course\Http\Resources\CourseDetailResource;
 use App\Modules\Course\Model\Course;
 use App\Modules\Course\Services\CourseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class InstructorCourseController extends Controller
 {
@@ -49,7 +50,6 @@ class InstructorCourseController extends Controller
             ],
             "message" => "Course details",
         ], 200);
-
     }
 
     public function getStudents($course_id, Request $request)
@@ -87,6 +87,10 @@ class InstructorCourseController extends Controller
 
     public function update(Course $course, CourseRequest $request)
     {
+        if (Gate::denies('manage', $course)) {
+            return $this->unauthorize();
+        }
+
         $course = $this->service->update($course, $request);
 
         return response()->json([
@@ -101,6 +105,10 @@ class InstructorCourseController extends Controller
 
     public function destroy($course)
     {
+        if (Gate::denies('manage', $course)) {
+            return $this->unauthorize();
+        }
+
         $this->service->delete($course);
 
         return response()->json([], 204);

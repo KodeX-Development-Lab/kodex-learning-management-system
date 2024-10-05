@@ -2,7 +2,7 @@
 
 namespace App\Modules\Course\Services;
 
-use App\Modules\Course\Models\CourseFaq;
+use App\Modules\Course\Model\CourseFaq;
 
 class CourseFaqService
 {

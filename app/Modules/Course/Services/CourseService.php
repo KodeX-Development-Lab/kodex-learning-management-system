@@ -20,6 +20,10 @@ class CourseService
         $data = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name'])
             ->withCount(['lessons', 'students'])
             ->where(function ($query) use ($request, $keyword) {
+                if ($request->user_id != null) {
+                    $query->where('user_id', $request->user_id);
+                }
+
                 if ($request->category != null && strtolower($request->category) != 'all') {
                     $query->where('category_id', $request->category);
                 }

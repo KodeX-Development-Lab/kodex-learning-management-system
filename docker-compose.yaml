@@ -5,11 +5,11 @@ services:
     image: minio/minio
     environment:
         MINIO_ROOT_USER: 'AKIAIOSFODNN7EXAMPLE' # or any user name you like , this will be used to log in to minio dashboard
-        MINIO_ROOT_PASSWORD: 'wJalrXUtnFEMIK7MDENGbPxRfiCYEXAMPLEKEY'
-    command: ['server', '/data', '--console-address', ':7001']
+        MINIO_ROOT_PASSWORD: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+    command: ['server', '/data', '--console-address', ':9001']
     ports:
-      - 7000:7000
-      - 7001:7001
+      - 9000:9000
+      - 9001:9001
     volumes:
         - minio:/data
 

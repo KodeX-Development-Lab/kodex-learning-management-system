@@ -3,9 +3,9 @@
 namespace App\Modules\Course\Http\Controller;
 
 use App\Http\Controllers\Controller;
-use App\Modules\CourseFaq\Services\CourseFaqService;
 use App\Modules\Course\Http\Requests\CourseFaqRequest;
-use App\Modules\Course\Models\CourseFaq;
+use App\Modules\Course\Model\CourseFaq;
+use App\Modules\Course\Services\CourseFaqService;
 use Illuminate\Http\Request;
 
 class CourseFaqController extends Controller
@@ -22,13 +22,13 @@ class CourseFaqController extends Controller
         return response()->json([
             'status'  => true,
             'data'    => [
-                'faqs' => $this->service->all($request),
+                'faqs' => $this->service->index($request),
             ],
             'message' => 'success',
         ], 200);
     }
 
-    public function show(CourseFaq $faq)
+    public function show($course_id, CourseFaq $faq)
     {
         return response()->json([
             'status'  => true,
@@ -36,7 +36,7 @@ class CourseFaqController extends Controller
                 'faq' => $faq,
             ],
             'message' => 'Success',
-        ], 201);
+        ], 200);
     }
 
     public function store($course_id, CourseFaqRequest $request)
@@ -49,12 +49,12 @@ class CourseFaqController extends Controller
                 'faq' => $faq,
             ],
             'message' => 'Successfully saved',
-        ]);
+        ], 201);
     }
 
-    public function update($course_id, CourseFaq $courseFaq, CourseFaqRequest $request)
+    public function update($course_id, CourseFaq $faq, CourseFaqRequest $request)
     {
-        $faq = $this->service->update($courseFaq, $request);
+        $this->service->update($faq, $request);
 
         return response()->json([
             'status'  => true,
@@ -65,9 +65,9 @@ class CourseFaqController extends Controller
         ], 200);
     }
 
-    public function destroy(CourseFaq $courseFaq)
+    public function destroy($course_id, CourseFaq $faq)
     {
-        $courseFaq->delete();
+        $faq->delete();
 
         return response()->json([], 204);
     }
