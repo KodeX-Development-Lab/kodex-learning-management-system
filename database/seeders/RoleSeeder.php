@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Modules\Instructors\Enums\InstructorStatus;
+use App\Modules\Instructors\Models\InstructorDetail;
+use App\Modules\ProfessionalField\Models\ProfessionalField;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -29,6 +32,15 @@ class RoleSeeder extends Seeder
             'slug'     => Str::slug('Super Admin'),
             'email'    => 'admin@example.com',
             'password' => Hash::make('admin1234'),
+        ]);
+
+        $professionalField = ProfessionalField::first();
+        $instructor_detail = InstructorDetail::create([
+            'user_id'                   => $user->id,
+            'professional_field_id'     => $professionalField->id,
+            'work_experience_years'     => 2,
+            'teaching_experience_years' => 2,
+            'status'                    => InstructorStatus::APPROVED->value,
         ]);
 
         $user->assignRole(['Admin', 'Instructor', 'Student']);
