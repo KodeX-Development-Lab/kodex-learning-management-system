@@ -109,6 +109,11 @@ class Course extends Model
         return $this->hasManyThrough(Lesson::class, Section::class);
     }
 
+    public function faqs()
+    {
+        return $this->hasMany(CourseFaq::class, 'course_id', 'id');
+    }
+
     public function students()
     {
         return $this->belongsToMany(User::class, 'enrollments')->withTimestamps();
