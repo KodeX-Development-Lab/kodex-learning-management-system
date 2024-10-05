@@ -13,6 +13,7 @@ use App\Modules\LearnerSide\Http\Controllers\Api\MyLearningController;
 use App\Modules\ProfessionalField\Http\Controller\Api\ProfessionalFieldController;
 use App\Modules\Roles\Http\Controllers\Api\RoleController;
 use App\Modules\Storage\Http\Controllers\Api\FileUploadController;
+use App\Modules\Topics\Http\Controller\TopicController;
 use App\Modules\User\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -60,9 +61,8 @@ Route::prefix('/v1')->middleware(['auth:sanctum'])->name('api.')->group(function
         /** Course Related Data */
         Route::resource('categories', CategoryController::class);
         Route::resource('languages', LanguageController::class);
-        Route::resource('topics', CategoryController::class);
+        Route::resource('topics', TopicController::class);
     });
-
 });
 
 /** Instructor Dashboard */

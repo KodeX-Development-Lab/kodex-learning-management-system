@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Modules\Course\Model\Course;
 use App\Modules\Storage\Classes\ObjectStorage;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
 
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +52,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password'          => 'hashed',
     ];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name',
+            ],
+        ];
+    }
 
     public function getProfileImageAttribute($value)
     {

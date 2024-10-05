@@ -22,7 +22,7 @@ class ProfessionalFieldController extends Controller
         return response()->json([
             'status'  => true,
             'data'    => [
-                'professionalField' => $this->service->all($request),
+                'professionalFields' => $this->service->all($request),
             ],
             'message' => 'Success',
         ], 200);
@@ -41,7 +41,6 @@ class ProfessionalFieldController extends Controller
 
     public function store(ProfessionalFieldRequest $request)
     {
-
         $professionalField = $this->service->store($request);
 
         return response()->json([
@@ -55,7 +54,6 @@ class ProfessionalFieldController extends Controller
 
     public function update(ProfessionalFieldRequest $request, ProfessionalField $professionalField)
     {
-
         $professionalField = $this->service->update($professionalField, $request);
 
         return response()->json([

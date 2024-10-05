@@ -3,13 +3,14 @@ namespace App\Modules\Course\Model;
 
 use App\Models\User;
 use App\Modules\Storage\Classes\ObjectStorage;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, Sluggable;
 
     protected $table = "lessons";
 
@@ -22,6 +23,15 @@ class Lesson extends Model
         'attachment',
         'order',
     ];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+            ],
+        ];
+    }
 
     public function getAttachmentAttribute($value)
     {

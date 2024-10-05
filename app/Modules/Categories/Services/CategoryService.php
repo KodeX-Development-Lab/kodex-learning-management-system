@@ -47,7 +47,7 @@ class CategoryService
     {
         $category = Category::create([
             'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
+            // 'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'created_by'  => $user->id,
         ]);
@@ -58,7 +58,7 @@ class CategoryService
     public function update($category, $request, $user)
     {
         $category->name        = $request->name;
-        $category->slug        = Str::slug($request->name);
+        // $category->slug        = Str::slug($request->name);
         $category->description = $request->description;
         $category->updated_by  = $user->id;
         $category->save();

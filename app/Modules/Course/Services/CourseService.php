@@ -115,7 +115,7 @@ class CourseService
 
         $course = Course::create([
             'title'              => $request->title,
-            'slug'               => Str::slug($request->title),
+            // 'slug'               => Str::slug($request->title),
             'user_id'            => $request->user_id,
             'category_id'        => $request->category_id,
             'language_id'        => $request->language_id,
@@ -172,7 +172,7 @@ class CourseService
 
         $course->update([
             'title'              => $request->title,
-            'slug'               => Str::slug($request->title),
+            // 'slug'               => Str::slug($request->title),
             // 'user_id'            => $request->user_id,
             'category_id'        => $request->category_id,
             'language_id'        => $request->language_id,

@@ -9,10 +9,11 @@ use App\Modules\Topics\Models\Topic;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Course extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, Sluggable;
 
     protected $fillable = [
         'title',
@@ -40,6 +41,15 @@ class Course extends Model
     ];
 
     protected $appends = ['total_time_minutes_text'];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 
     public function getThumbnailAttribute($value)
     {

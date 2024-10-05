@@ -16,8 +16,17 @@ class Section extends Model
         'title',
         'slug',
         'description',
-        'order'
+        'order',
     ];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+            ],
+        ];
+    }
 
     public function course()
     {
