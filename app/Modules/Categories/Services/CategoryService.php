@@ -47,7 +47,6 @@ class CategoryService
     {
         $category = Category::create([
             'name'        => $request->name,
-            // 'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'created_by'  => $user->id,
         ]);

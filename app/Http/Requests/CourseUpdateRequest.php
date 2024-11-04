@@ -26,7 +26,6 @@ class CourseUpdateRequest extends FormRequest
 
         return [
             'title' => 'sometimes|required|string|max:255',
-            // 'slug' => 'sometimes|required|string|max:255|unique:courses,slug,' . $courseId,
             'user_id' => 'sometimes|required|uuid|exists:users,id',
             'category_ids' => 'nullable|array',
             'category_ids.*' => 'integer|exists:categories,id',

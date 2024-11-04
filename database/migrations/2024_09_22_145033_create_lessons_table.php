@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('youtube_url')->nullable();
             $table->string('attachment')->nullable();
             $table->integer('order')->default(0);
+            $table->boolean('is_required_to_complete_course')->default(false);
             $table->timestamps();
         });
     }

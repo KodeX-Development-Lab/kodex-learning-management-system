@@ -47,7 +47,6 @@ class TopicService
     {
         $topic = Topic::create([
             'name'        => $request->name,
-            // 'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'created_by'  => $user->id,
         ]);
@@ -58,7 +57,6 @@ class TopicService
     public function update($topic, $request, $user)
     {
         $topic->name        = $request->name;
-        // $topic->slug        = Str::slug($request->name);
         $topic->description = $request->description;
         $topic->updated_by  = $user->id;
         $topic->save();

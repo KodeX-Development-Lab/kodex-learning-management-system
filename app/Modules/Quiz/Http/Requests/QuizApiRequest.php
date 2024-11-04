@@ -22,12 +22,11 @@ class QuizApiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'section_id' => 'nullable|exists:sections,id',
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'question' => 'required|string',
+            'section_id'      => 'nullable|exists:sections,id',
+            'title'           => 'required|string|max:255',
+            'question'        => 'required|string',
             'provided_answer' => 'nullable|string|max:255',
-            'answer' => 'nullable|string|max:255',
+            'answer'          => 'nullable|string|max:255',
         ];
 
     }

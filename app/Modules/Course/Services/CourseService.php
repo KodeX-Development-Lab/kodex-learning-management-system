@@ -57,7 +57,7 @@ class CourseService
 
     public function show($slug)
     {
-        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'faqs'. 'sections.lessons'])
+        $course = Course::with(['instructor:id,name,profile_image', 'category:id,name', 'language:id,name', 'topics:id,name', 'students:id,name', 'attachments', 'faqs' . 'sections.lessons'])
             ->withCount(['lessons', 'students'])
             ->where('slug', $slug)
             ->firstOrFail();
@@ -115,7 +115,6 @@ class CourseService
 
         $course = Course::create([
             'title'              => $request->title,
-            // 'slug'               => Str::slug($request->title),
             'user_id'            => $request->user_id,
             'category_id'        => $request->category_id,
             'language_id'        => $request->language_id,
@@ -172,8 +171,6 @@ class CourseService
 
         $course->update([
             'title'              => $request->title,
-            // 'slug'               => Str::slug($request->title),
-            // 'user_id'            => $request->user_id,
             'category_id'        => $request->category_id,
             'language_id'        => $request->language_id,
             'description'        => $request->description,

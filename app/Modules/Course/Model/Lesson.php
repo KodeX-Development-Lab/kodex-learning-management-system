@@ -22,6 +22,7 @@ class Lesson extends Model
         'youtube_url',
         'attachment',
         'order',
+        'is_required_to_complete_course',
     ];
 
     public function sluggable(): array

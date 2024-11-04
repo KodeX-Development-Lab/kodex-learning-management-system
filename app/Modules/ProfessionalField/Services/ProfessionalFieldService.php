@@ -47,7 +47,6 @@ class ProfessionalFieldService
     {
         $professionalField = ProfessionalField::create([
             'name'        => $request->name,
-            // 'slug'        => Str::slug($request->name),
             'description' => $request->description,
         ]);
         return $professionalField;
@@ -56,7 +55,6 @@ class ProfessionalFieldService
     public function update($professionalField, $request)
     {
         $professionalField->name        = $request->name;
-        // $professionalField->slug        = Str::slug($request->name);
         $professionalField->description = $request->description;
         $professionalField->save();
         return $professionalField;

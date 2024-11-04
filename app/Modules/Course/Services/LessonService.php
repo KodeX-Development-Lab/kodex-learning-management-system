@@ -4,7 +4,6 @@ namespace App\Modules\Course\Services;
 use App\Modules\Course\Model\Course;
 use App\Modules\Course\Model\Lesson;
 use App\Modules\Storage\Classes\ObjectStorage;
-use Illuminate\Support\Str;
 
 class LessonService
 {
@@ -35,13 +34,13 @@ class LessonService
         }
 
         $lesson = Lesson::create([
-            'section_id'  => $request->section_id,
-            'title'       => $request->title,
-            // 'slug'        => Str::slug($request->title),
-            'description' => $request->description,
-            'youtube_url' => $request->youtube_url,
-            'attachment'  => $attachment,
-            'order'       => $request->order,
+            'section_id'                     => $request->section_id,
+            'title'                          => $request->title,
+            'description'                    => $request->description,
+            'youtube_url'                    => $request->youtube_url,
+            'attachment'                     => $attachment,
+            'order'                          => $request->order ?? 0,
+            'is_required_to_complete_course' => $request->is_required_to_complete_course ?? 0,
         ]);
 
         $course = Course::findOrFail($request->course_id);
@@ -62,12 +61,12 @@ class LessonService
         }
 
         $lesson->update([
-            'title'       => $request->title,
-            // 'slug'        => Str::slug($request->title),
-            'description' => $request->description,
-            'youtube_url' => $request->youtube_url,
-            'attachment'  => $new_attachment,
-            'order'       => $request->order,
+            'title'                          => $request->title,
+            'description'                    => $request->description,
+            'youtube_url'                    => $request->youtube_url,
+            'attachment'                     => $new_attachment,
+            'order'                          => $request->order ?? 0,
+            'is_required_to_complete_course' => $request->is_required_to_complete_course ?? 0,
         ]);
 
         if ($old_attachment != $new_attachment) {

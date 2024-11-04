@@ -23,15 +23,16 @@ class LessonRequest extends FormRequest
     {
         $this->merge(['course_id' => $this->route('course_id')]);
         $this->merge(['section_id' => $this->route('section_id')]);
-        
+
         return [
-            'course_id'   => 'required|exists:courses,id',
-            'section_id'  => 'required|exists:sections,id',
-            'title'       => 'required|string',
-            'description' => 'nullable|string',
-            'youtube_url' => 'nullable|url',
-            'attachment'  => 'nullable|file',
-            'order'       => 'nullable|numeric|integer|min:0',
+            'course_id'                      => 'required|exists:courses,id',
+            'section_id'                     => 'required|exists:sections,id',
+            'title'                          => 'required|string',
+            'description'                    => 'nullable|string',
+            'youtube_url'                    => 'nullable|url',
+            'attachment'                     => 'nullable|file',
+            'order'                          => 'nullable|numeric|integer|min:0',
+            'is_required_to_complete_course' => 'nullable|boolean',
         ];
     }
 }

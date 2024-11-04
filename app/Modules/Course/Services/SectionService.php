@@ -34,7 +34,6 @@ class SectionService
         $section = Section::create([
             'course_id'   => $request->course_id,
             'title'       => $request->title,
-            // 'slug'        => Str::slug($request->title),
             'description' => $request->description,
             'order'       => $request->order,
         ]);
@@ -50,7 +49,6 @@ class SectionService
 
         $section->update([
             'title'       => $request->title,
-            // 'slug'        => Str::slug($request->title),
             'description' => $request->description,
             'order'       => $request->order,
         ]);
